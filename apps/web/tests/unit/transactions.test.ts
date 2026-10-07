@@ -29,3 +29,49 @@ describe('transaction authority', () => {
     ops.synchronized = async () => true; await controller.retrySynchronization(ops); expect(controller.getState().status).toBe('success');
   });
 });
+
+it('recovers confirmation after an RPC failure without preparing or submitting again', async () => {
+  const controller = createTransactionController(() => {});
+  const ops = operations();
+  ops.prepare = vi.fn(ops.prepare);
+  ops.submit = vi.fn(ops.submit);
+  ops.receipt = vi.fn<TransactionOperations['receipt']>()
+    .mockRejectedValueOnce(new Error('connection lost'))
+    .mockResolvedValueOnce(receipt);
+  await controller.run(ops);
+  expect(controller.getState()).toMatchObject({ status: 'failed', hash });
+  await controller.retryConfirmation(ops);
+  expect(controller.getState()).toMatchObject({ status: 'synchronizing', hash, receipt });
+  expect(ops.prepare).toHaveBeenCalledTimes(1);
+  expect(ops.submit).toHaveBeenCalledTimes(1);
+  expect(ops.receipt).toHaveBeenCalledTimes(2);
+});
+
+it('does not treat a reverted replacement receipt as proof the original payment reverted', async () => {
+  const controller = createTransactionController(() => {});
+  const ops = operations();
+  ops.receipt = async () => ({ ...receipt, transactionHash: '0x2222', status: 'reverted' });
+  await controller.run(ops);
+  expect(controller.getState()).toMatchObject({ status: 'failed', kind: 'rpc', hash });
+});
+
+it('does not retry confirmation for a known revert', async () => {
+  const controller = createTransactionController(() => {});
+  const ops = operations();
+  ops.receipt = async () => ({ ...receipt, status: 'reverted' });
+  await controller.run(ops);
+  await expect(controller.retryConfirmation(ops)).rejects.toThrow('No unconfirmed transaction');
+});
+
+it('prevents a duplicate submission while wallet approval is pending', async () => {
+  const controller = createTransactionController(() => {});
+  let approve!: (value: Hash) => void;
+  const ops = operations();
+  ops.submit = vi.fn(() => new Promise<Hash>(resolve => { approve = resolve; }));
+  const pending = controller.run(ops);
+  await Promise.resolve();
+  await expect(controller.run(ops)).rejects.toThrow('already active');
+  approve(hash);
+  await pending;
+  expect(ops.submit).toHaveBeenCalledTimes(1);
+});

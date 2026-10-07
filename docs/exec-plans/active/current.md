@@ -14,7 +14,7 @@ The goal is to produce a stable, verified foundation that future implementation 
 
 ## 2. Current Phase
 
-Status: **Frontend foundation code written across Phases 2–14; full dependency/runtime verification pending**
+Status: **Phase 15 verification in progress — typechecks, 35 unit tests and production/worker build pass; browser/security acceptance pending**
 
 Dependency research and ADR creation are complete. [ADR-0001](../../decisions/ADR-0001-frontend-stack.md) governs the approved exact frontend baseline. Its declared status is **Proposed**; the user explicitly directed that its approved baseline choices control implementation planning. This plan records that authorization without changing the ADR status or resolving its gates.
 
@@ -328,9 +328,9 @@ Do not pretend placeholder route content represents completed features.
 - [ ] Every required initial route resolves.
 - [x] No route contains unnecessary duplicated infrastructure.
 - [x] Client components are used only where browser behavior requires them.
-- [ ] Production build succeeds.
+- [x] Production build succeeds.
 - [x] TypeScript strict mode is enabled.
-- [ ] No type errors remain.
+- [x] No type errors remain.
 
 ---
 
@@ -714,7 +714,7 @@ Do not cache authoritative mutable data such as:
 - [x] Static-shell strategy is defined.
 - [ ] Mutable authoritative APIs are not cached incorrectly.
 - [ ] Installed application can load its intended shell.
-- [ ] PWA configuration does not break production build.
+- [x] PWA configuration does not break production build.
 
 ---
 
@@ -742,9 +742,9 @@ Minimum foundation tests should cover:
 
 ### Phase 14 Acceptance Criteria
 
-- [ ] Unit test command works.
+- [x] Unit test command works.
 - [ ] End-to-end test command works.
-- [ ] Initial meaningful tests pass.
+- [x] Initial meaningful tests pass.
 - [x] No test suite depends unnecessarily on production services.
 - [x] Critical architecture boundaries have at least baseline verification.
 
@@ -752,7 +752,7 @@ Minimum foundation tests should cover:
 
 ## 19. Phase 15 — Final Foundation Verification
 
-Status: **Pending**
+Status: **In progress: compiler, unit and build checks pass; browser/security checks pending**
 
 Run the complete repository quality gate.
 
@@ -781,9 +781,9 @@ Also verify:
 
 - [ ] Formatting passes.
 - [ ] Lint passes.
-- [ ] Typecheck passes.
-- [ ] Tests pass.
-- [ ] Production build succeeds.
+- [x] Typecheck passes.
+- [x] Tests pass.
+- [x] Production build succeeds.
 - [ ] Required routes load.
 - [x] Repository documentation reflects actual state.
 - [x] Remaining blockers are explicitly documented.
@@ -838,11 +838,14 @@ Do not invent server-authoritative rules merely to complete scaffolding.
 
 ## 21. Progress
 
+End-to-end continuation (2026-10-07): added retryable transaction confirmation without duplicate submission, replacement-receipt identity checks, API cancellation propagation, offline balance suppression, and renderer-independent DOM host lifecycle with failed-initialization cleanup. Added regression coverage; 35 tests and application/worker/shared typechecks pass. Gameplay/backend input and a user-started browser-test URL were requested and remain pending. The source of truth still contains no authoritative mechanics or backend protocol; those features remain blocked rather than invented.
+
+
 Research checkpoint (2026-10-07): official dependency research completed and recorded.
 
 Current checkpoint (2026-10-07): implementation authorized without agent installation or server startup. Exact pnpm manifests, all eight routes, Night Market tokens/UI, providers, validated configuration, API/HTTP interfaces, runtime-specific wallet adapters, transaction controller/hook, browser-only Phaser host, shared replay interfaces, PWA/static fallback and tests are written. No authoritative service, gameplay or payment flow is represented as operational. A root npm package-lock.json appeared during work, locking only TypeScript; it was left unchanged and is not a resolved pnpm workspace graph.
 
-Verification completed with the locally available TypeScript 5.9.3: source syntax diagnostics clear; shared-package strict typecheck passes; architecture/exact-manifest and whitespace scripts pass; dependency-light core assertions pass. Full application/worker typecheck, Vitest, build, resolved graph/audit and Playwright/device verification remain pending because their dependencies are absent. Standard ESLint/formatter pins remain unapproved; the narrow source checks do not replace those tools.
+Verification update: user installation is complete. Both wallet providers now narrow a centralized active-network discriminated union before invoking wagmi; each has one chain and its own configured transport. Application/worker/shared typechecks, all 35 Vitest tests, source architecture/whitespace checks and Next/Serwist production build pass. All direct installed versions match manifests; wagmi resolves core 2.22.1 and connectors 6.2.0. Generated worker inspection confirms all 214 precache entries are static chunks/icons/offline HTML. Browser/device checks remain pending without a user-started server. Security audit execution was refused by the Windows sandbox; no result is claimed. Standard ESLint/formatter pins remain unapproved.
 
 Current overall progress:
 
@@ -851,12 +854,14 @@ Current overall progress:
 - [x] Explicit unavailable API/auth/GoodDollar/game states; no fake successful integrations.
 - [x] Provisional frontend contracts recorded in [API_CONTRACTS.md](../../API_CONTRACTS.md).
 - [x] Dependency-free source checks, shared typecheck and targeted core checks.
-- [ ] User installation and generated lockfile; resolved graph/audit review.
-- [ ] Full app/worker typecheck, Vitest, production/worker build and browser checks.
+- [x] User installation and generated pnpm lockfile; direct pins and critical wagmi internals inspected.
+- [ ] Complete resolved-tree security audit (shell execution blocked).
+- [x] App/worker/shared typechecks, 35 Vitest tests and production/worker build.
+- [ ] Browser E2E, PWA offline/update and real-device wallet checks.
 - [ ] Approved standard lint/formatter tools and exact pnpm toolchain pin.
 - [ ] Resolve ADR-0001 integration gates, authoritative backend schemas, game rules and contract deployments before affected integrations.
 
-Exact next implementation area: after dependency availability, fix any foundation compile/build/runtime defects against the unchanged baseline; then implement the approved backend session/round contracts and shared deterministic gameplay rules when supplied. Do not invent those requirements. No further application feature requiring those authorities is currently safe to activate.
+Exact next implementation area: run browser/PWA tests against a user-started server and address any runtime defects; complete the security audit. Then implement the approved backend session/round contracts and shared deterministic gameplay rules when supplied. Do not invent those requirements. No further application feature requiring those authorities is currently safe to activate.
 
 ---
 

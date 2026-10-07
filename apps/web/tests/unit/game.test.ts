@@ -19,3 +19,24 @@ describe('game lifecycle', () => {
     bridge.emit({ type: 'ready' }); off(); bridge.emit({ type: 'ready' }); bridge.dispose(); expect(listener).toHaveBeenCalledTimes(1);
   });
 });
+
+it('cleans up a loaded runtime when initialization fails', async () => {
+  const error = new Error('renderer unavailable');
+  const failed = vi.fn();
+  const runtime = { resize: vi.fn(() => { throw error; }), setVisible: vi.fn(), destroy: vi.fn() };
+  const mounted = mountRuntime(async () => runtime, failed);
+  mounted.resize(360, 480);
+  await mounted.ready;
+  expect(failed).toHaveBeenCalledWith(error);
+  expect(runtime.destroy).toHaveBeenCalledTimes(1);
+  mounted.dispose();
+  expect(runtime.destroy).toHaveBeenCalledTimes(1);
+});
+
+it('reports cleanup failure without an unhandled initialization rejection', async () => {
+  const failed = vi.fn();
+  const runtime = { resize: vi.fn(), setVisible() { throw new Error('visibility'); }, destroy() { throw new Error('cleanup'); } };
+  const mounted = mountRuntime(async () => runtime, failed);
+  await expect(mounted.ready).resolves.toBeUndefined();
+  expect(failed).toHaveBeenCalledWith(expect.any(AggregateError));
+});

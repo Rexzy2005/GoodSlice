@@ -7,5 +7,5 @@ export function useTransaction() {
   const [state, setState] = useState<TransactionState>({ status: 'idle' });
   const [controller] = useState(() => createTransactionController(next => { if (alive.current) setState(next); }));
   useEffect(() => { alive.current = true; return () => { alive.current = false; }; }, []);
-  return { state, run: controller.run, reset: controller.reset, retrySynchronization: controller.retrySynchronization };
+  return { state, run: controller.run, reset: controller.reset, retryConfirmation: controller.retryConfirmation, retrySynchronization: controller.retrySynchronization };
 }

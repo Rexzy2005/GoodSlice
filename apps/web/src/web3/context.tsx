@@ -9,7 +9,7 @@ export interface WalletState {
   wrongNetwork: boolean;
   message?: string;
   retry?: () => void;
-  balance: { status: 'unavailable' | 'loading' | 'error' | 'ready'; formatted?: string };
+  balance: { status: 'offline' | 'unavailable' | 'loading' | 'error' | 'ready'; formatted?: string };
 }
 export const WalletContext = createContext<WalletState>({ runtime: 'detecting', status: 'unavailable', wrongNetwork: false, balance: { status: 'unavailable' } });
 export const useWallet = () => useContext(WalletContext);

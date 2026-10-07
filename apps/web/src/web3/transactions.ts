@@ -9,11 +9,15 @@ export type TransactionState =
 const allowed: Record<TransactionState['status'], readonly TransactionState['status'][]> = {
   idle: ['preparing'], preparing: ['awaiting_wallet', 'failed'], awaiting_wallet: ['submitted', 'rejected', 'failed'],
   submitted: ['confirming', 'failed'], confirming: ['confirmed', 'failed'], confirmed: ['synchronizing'],
-  synchronizing: ['success', 'failed'], success: ['idle'], rejected: ['idle'], failed: ['idle', 'synchronizing'],
+  synchronizing: ['success', 'failed'], success: ['idle'], rejected: ['idle'], failed: ['idle', 'confirming', 'synchronizing'],
 };
 export function transitionTransaction(current: TransactionState, next: TransactionState): TransactionState {
   if (!allowed[current.status].includes(next.status)) throw new Error('Invalid transaction transition: ' + current.status + ' → ' + next.status);
   if (current.status === 'failed' && next.status === 'synchronizing' && (!current.receipt || current.kind !== 'synchronization')) throw new Error('Only confirmed transactions can retry synchronization');
+  if (current.status === 'failed' && next.status === 'confirming'
+    && (!current.hash || current.receipt || !['rpc', 'unknown'].includes(current.kind))) {
+    throw new Error('Only an unconfirmed submitted transaction can retry confirmation');
+  }
   if ('hash' in current && current.hash && 'hash' in next && next.hash !== current.hash) throw new Error('Transaction hash changed without a confirmed replacement');
   if ('receipt' in next && next.receipt && (next.receipt.status !== 'success' || next.receipt.transactionHash !== next.hash)) throw new Error('Expected a successful matching receipt');
   return next;
@@ -60,6 +64,22 @@ export function createTransactionController(publish: (state: TransactionState) =
       move({ status: 'failed', kind: 'synchronization', message: 'Transaction confirmed. Application synchronization failed; retry checking its status.', hash: receipt.transactionHash, receipt });
     }
   };
+  const confirmationFailure = (error: unknown, hash: Hash) => {
+    const kind = classifyTransactionError(error);
+    move({ status: 'failed', kind: kind === 'rejected' ? 'rpc' : kind, hash,
+      message: kind === 'reverted'
+        ? 'The transaction reverted. No purchase or reward was granted.'
+        : 'A transaction was submitted, but its outcome could not be confirmed. Check its status before trying again.' });
+  };
+  const confirm = async (operations: TransactionOperations, hash: Hash) => {
+    move({ status: 'confirming', hash });
+    const receipt = await operations.receipt(hash);
+    // Validate identity before interpreting success OR revert: a replacement is a different transaction.
+    if (receipt.transactionHash !== hash) throw new TransactionFailure('rpc', 'The wallet replaced this transaction. Review its final outcome in the explorer.');
+    if (receipt.status !== 'success') throw new TransactionFailure('reverted', 'The transaction reverted.');
+    move({ status: 'confirmed', hash, receipt });
+    await sync(operations, receipt);
+  };
   return {
     getState: () => state,
     reset() { if (busy) throw new Error('Transaction is still running'); move({ status: 'idle' }); },
@@ -71,18 +91,24 @@ export function createTransactionController(publish: (state: TransactionState) =
       try {
         move({ status: 'preparing' }); await operations.prepare();
         move({ status: 'awaiting_wallet' }); awaitingWallet = true; hash = await operations.submit();
-        move({ status: 'submitted', hash }); move({ status: 'confirming', hash });
-        const receipt = await operations.receipt(hash);
-        if (receipt.status !== 'success') throw new TransactionFailure('reverted', 'The transaction reverted.');
-        // Replacement handling must be explicit in the receipt adapter; never label another hash as this payment.
-        if (receipt.transactionHash !== hash) throw new TransactionFailure('rpc', 'The wallet replaced this transaction. Review its final outcome in the explorer.');
-        move({ status: 'confirmed', hash, receipt }); await sync(operations, receipt);
+        move({ status: 'submitted', hash });
+        await confirm(operations, hash);
       } catch (error) {
         const kind = classifyTransactionError(error);
         if (kind === 'rejected' && awaitingWallet && !hash) move({ status: 'rejected', message: 'You declined the wallet request. Nothing was submitted.' });
         else move({ status: 'failed', kind: kind === 'rejected' ? 'rpc' : kind,
           message: kind === 'reverted' ? 'The transaction reverted. No purchase or reward was granted.' : hash ? 'A transaction was submitted, but its outcome could not be confirmed. Check the explorer before trying again.' : 'The transaction could not be completed.', ...(hash ? { hash } : {}) });
       } finally { busy = false; }
+    },
+    async retryConfirmation(operations: TransactionOperations) {
+      if (busy || state.status !== 'failed' || !state.hash || state.receipt || !['rpc', 'unknown'].includes(state.kind)) {
+        throw new Error('No unconfirmed transaction to check');
+      }
+      const hash = state.hash;
+      busy = true;
+      try { await confirm(operations, hash); }
+      catch (error) { confirmationFailure(error, hash); }
+      finally { busy = false; }
     },
     async retrySynchronization(operations: TransactionOperations) {
       if (busy || !('receipt' in state) || !state.receipt || !['synchronizing', 'failed'].includes(state.status)) throw new Error('No confirmed transaction awaiting synchronization');

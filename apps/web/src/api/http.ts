@@ -8,6 +8,7 @@ export type HttpBindings = { [K in keyof GoodSliceApi]: {
   response: z.ZodType<Awaited<ReturnType<GoodSliceApi[K]>>>;
 } };
 export async function requestValidated<T>(request: HttpRequest, schema: z.ZodType<T>, signal?: AbortSignal, transport: typeof fetch = fetch): Promise<T> {
+  signal?.throwIfAborted();
   let response: Response;
   try {
     response = await transport(request.url, { method: request.method, credentials: 'same-origin', cache: 'no-store', redirect: 'error',
@@ -20,7 +21,14 @@ export async function requestValidated<T>(request: HttpRequest, schema: z.ZodTyp
   }
   if (!response.ok) throw new ApiError('http', 'The service could not complete this request.', response.status);
   let value: unknown;
-  try { value = await response.json(); } catch { throw new ApiError('invalid-response', 'The service returned an unreadable response.'); }
+  try {
+    value = await response.json();
+  } catch (error) {
+    // A route/account change can abort while the response body is still streaming.
+    if (signal?.aborted) throw error;
+    throw new ApiError('invalid-response', 'The service returned an unreadable response.');
+  }
+  signal?.throwIfAborted();
   const result = schema.safeParse(value);
   if (!result.success) throw new ApiError('invalid-response', 'The service returned an unexpected response.');
   return result.data;

@@ -10,7 +10,15 @@ export function mountRuntime(load: () => Promise<GameRuntime>, failed: (error: u
     runtime = value;
     if (dimensions) runtime.resize(...dimensions);
     runtime.setVisible(visible);
-  }).catch(error => { if (!disposed) failed(error); });
+  }).catch(error => {
+    // Loading can succeed while resize/visibility initialization fails.
+    const failedRuntime = runtime;
+    runtime = undefined;
+    let failure: unknown = error;
+    try { failedRuntime?.destroy(); }
+    catch (cleanupError) { failure = new AggregateError([error, cleanupError], 'Game initialization and cleanup failed'); }
+    if (!disposed) failed(failure);
+  });
   return {
     ready,
     resize(width: number, height: number) { dimensions = [width, height]; if (!disposed) runtime?.resize(width, height); },

@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { createGameBridge } from './bridge';
-import { mountRuntime } from './lifecycle';
+import { attachGameHost } from './host-lifecycle';
 export function GameHost() {
   const container = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState('Preparing the game canvas…');
@@ -10,26 +10,16 @@ export function GameHost() {
   useEffect(() => {
     const parent = container.current;
     if (!parent) return;
-    let cancelled = false;
     const bridge = createGameBridge();
     const unsubscribe = bridge.onEvent(event => {
       if (event.type === 'ready') setStatus('Canvas ready. Play will open when verified rounds are available.');
       if (event.type === 'error') { setStatus(event.message); setFailed(true); }
     });
-    const mounted = mountRuntime(async () => {
-      const { createRuntime } = await import('./runtime');
-      if (cancelled) return { resize() {}, setVisible() {}, destroy() {} };
-      return createRuntime(parent, bridge);
-    }, () => { setFailed(true); setStatus('The game canvas could not load. Please retry.'); });
-    const observer = new ResizeObserver(entries => {
-      const bounds = entries[0]?.contentRect;
-      if (bounds) mounted.resize(bounds.width, bounds.height);
+    const host = attachGameHost(parent, bridge, () => import('./runtime'), () => {
+      setFailed(true);
+      setStatus('The game canvas could not load. Please retry.');
     });
-    observer.observe(parent);
-    const visibility = () => mounted.setVisible(document.visibilityState === 'visible');
-    document.addEventListener('visibilitychange', visibility);
-    visibility();
-    return () => { cancelled = true; observer.disconnect(); document.removeEventListener('visibilitychange', visibility); unsubscribe(); mounted.dispose(); bridge.dispose(); };
+    return () => { unsubscribe(); host.dispose(); bridge.dispose(); };
   }, [attempt]);
   return <section className="game-stage" aria-label="Game canvas">
     <div ref={container} className="game-canvas" aria-hidden="true" />
