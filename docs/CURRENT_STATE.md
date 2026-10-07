@@ -2,153 +2,35 @@
 
 ## Status
 
-Project phase: **Frontend foundation implementation readiness**
+Frontend foundation source is implemented; full application verification is pending. The controlling baseline is [ADR-0001](decisions/ADR-0001-frontend-stack.md). Its declared status remains Proposed, with explicit user authorization to implement its approved choices. [ADR-0002](decisions/ADR-0002-workspace-package-manager.md) records pnpm and user-owned installation/server startup.
 
-Application implementation has not started yet.
+## What exists
 
-Dependency research and ADR creation are complete. The approved planning baseline is governed by [ADR-0001](decisions/ADR-0001-frontend-stack.md); the [active execution plan](exec-plans/active/current.md) records its scope and authorization. No dependencies are installed.
+- Exact pnpm workspace manifests for apps/web and packages/shared. No pnpm workspace lockfile; no contracts package or GoodDollar SDK dependency. A root npm package-lock.json appeared during implementation and covers only TypeScript 5.9.3; the agent left it unchanged. It does not resolve the workspace.
+- Next.js App Router routes: /, /play, /tournament, /shop, /leaderboard, /rewards, /get-gd, /profile; server page composition and narrow client boundaries.
+- Night Market tokens, responsive navigation/cards, wallet panel, loading/error/unavailable states and install guidance. Mobile browser verification at 360px remains pending.
+- Central Query/Web3 providers; lazy standard RainbowKit provider and separate MiniPay injected provider with connection/retry state. Wallet connection is not backend authentication.
+- Central public/server configuration validation, environment example, Celo chain definitions, configured G$ balance/decimals reads and exact bigint conversion. No deployment defaults or payment ABI/calls.
+- Provisional typed API contracts, validated configurable HTTP adapter and an unavailable default adapter. No live backend or fake data. See [API_CONTRACTS.md](API_CONTRACTS.md).
+- Transaction controller/hook and status UI distinguish submission, confirmation, synchronization, rejection and failure. No live transaction action is enabled.
+- Lazy Phaser 4 host, typed bridge, resize/visibility/teardown handling. Shared package contains replay interfaces only. No playable rounds, RNG, scoring or authoritative replay implementation.
+- Turbopack-compatible Serwist config, manifest, generated PNG icons, static offline document and production worker registration. No caching of mutable authoritative data is configured.
+- Vitest/Playwright tests and source checks. No CI/deployment or production integration is established.
 
----
+## Verification
 
-## Established Project Documentation
+Passed: all source syntax diagnostics using the locally available approved TypeScript 5.9.3; strict shared-package typecheck; architecture/exact-manifest checks; source whitespace checks; targeted dependency-light assertions for MiniPay detection, cache exclusions, async game teardown and transaction rejection/revert/indexer separation.
 
-The following project knowledge has been defined:
+Not run: complete application/worker typecheck, Vitest suite, production/worker build, browser E2E/PWA, MiniPay devices, resolved dependency-graph/security audit. Application dependencies are absent; the agent did not install anything or start a server. Only TypeScript was locally available. Narrow custom source checks are not ESLint or a full formatter. UI/runtime correctness is not yet verified.
 
-- `AGENTS.md` — agent operating rules and repository context-routing rules
-- `docs/PROJECT.md` — authoritative product requirements and scope
-- `ARCHITECTURE.md` — system architecture, ownership boundaries, trust boundaries, and implementation invariants
+## Blockers and deliberate omissions
 
-These documents are the current source of truth for implementation.
+All six ADR-0001 gates remain: MiniPay session authentication; GoodDollar SDK/documentation drift; GoodDollar identity/claim in MiniPay; supported GoodDollar non-production environment; browser/WebView floor; GoodDollar package adoption. No workaround or SDK adoption was introduced.
 
----
+Backend schemas/session security, actual deployment addresses/ABIs and deterministic gameplay rules remain undefined. Their buttons/services are unavailable. Environment credentials must be supplied separately. No balances, inventory, rewards, sessions, transactions or UBI claims are simulated.
 
-## Application Implementation
+Zustand is deferred until shared local UI state requires it. Exact lint/formatter and pnpm toolchain versions are not yet approved. Asset generation uses canonical tokens; no external image/font service is required.
 
-Current implementation state:
+## Next action
 
-- Next.js application: not created
-- frontend routes/screens: not created
-- design system: not implemented
-- wallet integration: not implemented
-- MiniPay integration: not implemented
-- GoodDollar integration: not implemented
-- Phaser game runtime: not implemented
-- React ↔ Phaser bridge: not implemented
-- shared deterministic simulation: not implemented
-- backend API routes: not implemented
-- smart contracts: not implemented in this repository
-- PWA/service worker: not implemented
-- automated tests: not implemented
-- CI/CD: not configured
-
-Do not infer implementation from documentation alone.
-
----
-
-## Confirmed Target Architecture
-
-The planned product is one web codebase serving:
-
-- normal web browsers
-- installable PWA
-- MiniPay Mini App
-
-The application is expected to use:
-
-- Next.js App Router
-- TypeScript
-- Tailwind CSS
-- Phaser for browser gameplay
-- wagmi + viem for supported blockchain interaction
-- a standard-web wallet UI layer
-- TanStack Query for remote/server state
-- Zustand only for appropriate local UI state
-- GoodDollar integration for G$
-- a shared deterministic game package for client/server replay compatibility
-
-Exact frontend versions and runtime choices are governed by ADR-0001; the eventual manifest and lockfile will record installed versions. GoodDollar package adoption remains deferred.
-
----
-
-## Confirmed Product Boundaries
-
-The following architectural rules are already established:
-
-- normal gameplay remains off-chain
-- players sign their own blockchain transactions
-- the backend never signs transactions for players
-- final scores are not trusted directly from the browser
-- deterministic scoring/replay logic must be shared by client and server
-- Phaser remains isolated from React through a typed bridge
-- high-frequency game state must not be pushed through React
-- blockchain transaction confirmation and backend/indexer synchronization are separate states
-- inventory must not be granted optimistically from a submitted transaction
-- MiniPay and normal-browser wallet behavior may differ
-- production secrets and privileged keys must remain server-side
-
----
-
-## Known External Integration Dependency
-
-### MiniPay Authentication
-
-The original build specification defines Sign-In with Ethereum for session establishment.
-
-Current MiniPay requirements conflict with forcing users to sign arbitrary messages merely to access or authenticate to a Mini App.
-
-Therefore:
-
-- standard-browser authentication may use the approved SIWE flow
-- MiniPay authentication must remain separately abstracted
-- the production MiniPay server-session strategy is not yet resolved
-- no implementation should invent or silently assume a MiniPay authentication protocol
-
-This must be resolved through verified research and an architectural decision before MiniPay authentication is considered production-complete.
-
----
-
-## Frontend Baseline and Unresolved Integration Gates
-
-The completed [dependency research](research/dependency-baseline.md), verified on 2026-10-07, informed ADR-0001. Its declared status remains **Proposed**, while the user has explicitly designated its approved choices as the controlling implementation-planning baseline. Research remains partially verified; package resolution and application/runtime validation are not complete.
-
-Unresolved integration gaps:
-
-- GoodDollar claim documentation differs from published citizen SDK 1.2.7 exports and return types.
-- GoodDollar face verification requires wallet message signing; its supported/allowed MiniPay path remains unconfirmed.
-- The citizen SDK does not configure Celo Sepolia; the supported non-production identity/UBI environment must be agreed.
-- Tailwind v4 browser floors need an accepted MiniPay/device support matrix.
-
-ADR-0001 controls all six integration gates, including GoodDollar package adoption: do not install GoodDollar SDK packages until its required gates are resolved. Existing MiniPay session-authentication, backend-schema, contract-deployment and deterministic-game-rule dependencies remain unresolved. Stop at affected boundaries rather than inventing workarounds.
-
----
-
-## Immediate Next Action
-
-Await separate authorization to begin the foundation milestone in the active plan: exact manifests/lockfile, dependency-graph verification, Next.js App Router, strict TypeScript, Tailwind, quality-check infrastructure and existing architectural boundaries. This synchronization pass does not authorize installation or implementation, and none of the six ADR gates is resolved.
-
----
-
-## Verification State
-
-No application build, typecheck, lint, test, or runtime verification exists yet because implementation has not started.
-
-Documentation completion must not be interpreted as product implementation completion.
-
----
-
-## Update Rule
-
-Update this file only when the meaningful state of the project changes.
-
-Examples:
-
-- scaffolding is completed
-- a major capability becomes operational
-- a blocker appears or is resolved
-- an integration becomes functional
-- a feature changes from mocked to real
-- an implementation assumption materially changes
-
-Do not use this file as a chronological development log.
-
-Git history and execution plans should contain detailed implementation history.
+The user installs the committed manifests using pnpm, generating the lockfile. Resume with resolved graph review and full foundation checks against those dependencies; fix implementation defects without changing approved versions. Browser checks use a server started by the user. Keep the active plan open until required verification succeeds. Then obtain/implement authoritative backend round/session contracts and deterministic rules, respecting the six integration gates.

@@ -5,8 +5,9 @@
 | Decision | Declared status | Planning role |
 | --- | --- | --- |
 | [ADR-0001 — Frontend Dependency Baseline](ADR-0001-frontend-stack.md) | Proposed | Controlling frontend baseline for implementation planning by explicit user direction; six integration gates remain unresolved. |
+| [ADR-0002 — pnpm Workspace Ownership](ADR-0002-workspace-package-manager.md) | Accepted | Explicit user choice of pnpm; user owns installation/server startup while source implementation proceeds. |
 
-The status above matches the ADR exactly. The [active execution plan](../exec-plans/active/current.md) records the user-authorized planning scope; installation requires separate authorization. Supporting research is [dependency-baseline.md](../research/dependency-baseline.md), not the nonexistent `frontend-dependency-baseline.md` named in the ADR source field.
+The statuses above match their ADRs exactly. The [active execution plan](../exec-plans/active/current.md) records the user-authorized implementation scope; agent installation/server startup remain prohibited. Supporting research is [dependency-baseline.md](../research/dependency-baseline.md), not the nonexistent `frontend-dependency-baseline.md` named in the ADR source field.
 
 ## 1. Purpose
 

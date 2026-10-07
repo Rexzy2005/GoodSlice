@@ -1,0 +1,25 @@
+{
+  "name": "goodslice",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "24.21.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @goodslice/web dev",
+    "build": "pnpm --filter @goodslice/web build",
+    "start": "pnpm --filter @goodslice/web start",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm --filter @goodslice/web test",
+    "test:e2e": "pnpm --filter @goodslice/web test:e2e",
+    "lint": "node scripts/check-boundaries.mjs",
+    "format:check": "node scripts/check-format.mjs",
+    "test:core": "node scripts/check-core.mjs",
+    "assets:generate": "node scripts/generate-assets.mjs",
+    "test:pwa": "pnpm --filter @goodslice/web test:pwa"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}

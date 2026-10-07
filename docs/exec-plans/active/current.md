@@ -14,7 +14,7 @@ The goal is to produce a stable, verified foundation that future implementation 
 
 ## 2. Current Phase
 
-Status: **Frontend foundation implementation readiness — awaiting separate installation/implementation authorization**
+Status: **Frontend foundation code written across Phases 2–14; full dependency/runtime verification pending**
 
 Dependency research and ADR creation are complete. [ADR-0001](../../decisions/ADR-0001-frontend-stack.md) governs the approved exact frontend baseline. Its declared status is **Proposed**; the user explicitly directed that its approved baseline choices control implementation planning. This plan records that authorization without changing the ADR status or resolving its gates.
 
@@ -34,14 +34,14 @@ Core architecture
 First verified frontend foundation
 ```
 
-Application implementation has not yet started. This documentation synchronization task does not authorize package installation or scaffolding.
+On 2026-10-07 the user authorized implementation of all unblocked foundation areas immediately, using the accepted exact baseline and pnpm. The agent must not install/remove/upgrade/resolve packages, create a lockfile, or run a development/application server. The user owns installation and server startup. Code may proceed before graph verification; acceptance still requires it. See [ADR-0002](../../decisions/ADR-0002-workspace-package-manager.md). All six ADR-0001 integration gates remain unchanged.
 
 ### Immediate next implementation milestone
 
-Once separately authorized:
+Authorized implementation scope (code now written; verification remains pending):
 
-1. Create package manifests and a lockfile using the approved exact baseline in ADR-0001; exclude deferred GoodDollar packages.
-2. Resolve and inspect the dependency graph, including wagmi/core/connectors and critical transitives, and perform the ADR-required security/audit review before feature work. Do not bypass peer constraints or silently replace approved versions.
+1. Write exact package manifests from ADR-0001; exclude deferred GoodDollar packages. The user alone generates the lockfile with pnpm install.
+2. After user installation, inspect the resolved dependency graph, including wagmi/core/connectors and critical transitives, and perform the ADR-required security/audit review before integration acceptance. User direction allows source implementation before this verification; no peer bypass or version substitution is authorized.
 3. Establish the Next.js App Router foundation, strict TypeScript and Tailwind configuration.
 4. Establish linting, typecheck, unit-test, production-build (including the Serwist worker build), and end-to-end-test infrastructure.
 5. Establish the existing client/server, API, wallet/runtime, React–Phaser, shared deterministic-package, state-ownership and static-only PWA boundaries.
@@ -106,7 +106,9 @@ Do not depend on previous chat-session context.
 
 ## 5. Phase 1 — Verify Technical Baseline
 
-Status: **Dependency research and frontend baseline ADR complete; integration verification deferred to the applicable gates**
+Status: **Complete for dependency research and documentation-level version lock; integration verification remains gated**
+
+Phase 1 reverification (2026-10-07): rechecked official documentation, exact publisher metadata and the six compatibility chains against ADR-0001. No approved version changes are proposed. Reinspected GoodDollar SDK artifacts with publisher hash verification. The research includes per-row verification dates, compatibility constraints, stale guidance, and all six unresolved ADR gates. Exact pins are documented; there is no package-manager lockfile and no resolved-tree or runtime verification. The historical stop was superseded by the user’s implementation authorization; package installation remains user-owned.
 
 Research was recorded on 2026-10-07 in [dependency-baseline.md](../../research/dependency-baseline.md) and informed [ADR-0001](../../decisions/ADR-0001-frontend-stack.md). Core direct peers/engines were checked; no installation, lockfile generation, scaffolding or application verification has occurred. The earlier research-review checkpoint is complete for baseline planning.
 
@@ -151,6 +153,7 @@ docs/research/
 - [x] Required technologies have been checked against current official documentation.
 - [ ] Full integration compatibility has been confirmed (core direct peer/engine intersection checked; SDK/MiniPay and runtime verification pending).
 - [x] No package version was selected purely from memory.
+- [x] Reverified exact versions and all six compatibility chains; retained ADR-0001 pins and documented unresolved integration evidence.
 - [x] Relevant findings are recorded in `docs/research/`.
 - [x] Known conflicts are documented rather than silently resolved.
 - [x] Frontend baseline choices are recorded in ADR-0001 and authorized for implementation planning; its six integration gates remain unresolved.
@@ -159,9 +162,9 @@ docs/research/
 
 ## 6. Phase 2 — Establish Dependency Baseline
 
-Status: **Pending**
+Status: **Source foundation written; runtime/acceptance checks pending**
 
-Implement the exact baseline governed by ADR-0001 once installation is separately authorized. The research is supporting evidence, not an alternative version authority.
+Manifests implement the exact baseline governed by ADR-0001. Installation remains user-owned. The research is supporting evidence, not an alternative version authority.
 
 The baseline must include only dependencies required for the first implementation phase.
 
@@ -222,16 +225,16 @@ Do not install packages merely because they may be useful later.
 
 - [x] Frontend baseline versions are selected in ADR-0001.
 - [ ] Resolved dependency graph is inspected and verified before feature work; direct peer research alone is insufficient.
-- [ ] Package manifest reflects the approved baseline.
+- [x] Package manifest reflects the approved baseline.
 - [ ] Lockfile is generated and committed.
-- [ ] No unnecessary major dependencies are introduced.
+- [x] No unnecessary major dependencies are introduced.
 - [x] Frontend dependency choices and constraints are documented in ADR-0001.
 
 ---
 
 ## 7. Phase 3 — Scaffold Repository
 
-Status: **Pending**
+Status: **Source foundation written; runtime/acceptance checks pending**
 
 Create the initial workspace structure.
 
@@ -275,17 +278,17 @@ Do not move frontend-specific application code into `packages/shared/`.
 ### Phase 3 Acceptance Criteria
 
 - [ ] Workspace installs successfully.
-- [ ] Workspace boundaries are clear.
+- [x] Workspace boundaries are clear.
 - [ ] Application package can run independently.
 - [ ] Shared package can be imported without circular dependencies.
-- [ ] Repository structure matches the architecture.
-- [ ] No placeholder architecture contradicts `ARCHITECTURE.md`.
+- [x] Repository structure matches the architecture.
+- [x] No placeholder architecture contradicts `ARCHITECTURE.md`.
 
 ---
 
 ## 8. Phase 4 — Scaffold Web Application
 
-Status: **Pending**
+Status: **Source foundation written; runtime/acceptance checks pending**
 
 Create the Next.js App Router application.
 
@@ -323,17 +326,17 @@ Do not pretend placeholder route content represents completed features.
 
 - [ ] Application starts locally.
 - [ ] Every required initial route resolves.
-- [ ] No route contains unnecessary duplicated infrastructure.
-- [ ] Client components are used only where browser behavior requires them.
+- [x] No route contains unnecessary duplicated infrastructure.
+- [x] Client components are used only where browser behavior requires them.
 - [ ] Production build succeeds.
-- [ ] TypeScript strict mode is enabled.
+- [x] TypeScript strict mode is enabled.
 - [ ] No type errors remain.
 
 ---
 
 ## 9. Phase 5 — Establish Design Foundation
 
-Status: **Pending**
+Status: **Source foundation written; runtime/acceptance checks pending**
 
 Implement the Night Market design tokens from the product specification.
 
@@ -368,9 +371,9 @@ Avoid prematurely building a large design-system library.
 
 ### Phase 5 Acceptance Criteria
 
-- [ ] Design tokens exist in one canonical location.
-- [ ] Required colors are not scattered as repeated literals.
-- [ ] Typography is established.
+- [x] Design tokens exist in one canonical location.
+- [x] Required colors are not scattered as repeated literals.
+- [x] Typography is established.
 - [ ] Base mobile layout is functional.
 - [ ] Core contrast remains readable.
 - [ ] Initial UI works at a minimum 360-pixel viewport width.
@@ -379,7 +382,7 @@ Avoid prematurely building a large design-system library.
 
 ## 10. Phase 6 — Establish Provider Architecture
 
-Status: **Pending**
+Status: **Source foundation written; runtime/acceptance checks pending**
 
 Create the application provider composition.
 
@@ -410,17 +413,17 @@ Application Providers
 
 ### Phase 6 Acceptance Criteria
 
-- [ ] Provider composition exists in one clear boundary.
+- [x] Provider composition exists in one clear boundary.
 - [ ] Query client behavior is configured correctly.
-- [ ] Web3 configuration is not duplicated.
+- [x] Web3 configuration is not duplicated.
 - [ ] Server-only modules do not leak into client bundles.
-- [ ] Client boundaries remain narrow.
+- [x] Client boundaries remain narrow.
 
 ---
 
 ## 11. Phase 7 — Establish Environment Configuration
 
-Status: **Pending**
+Status: **Source foundation written; runtime/acceptance checks pending**
 
 Create a validated environment/configuration layer.
 
@@ -453,17 +456,17 @@ Application modules should consume the validated configuration layer rather than
 
 ### Phase 7 Acceptance Criteria
 
-- [ ] `.env.example` exists.
-- [ ] No secret values are committed.
-- [ ] Public and server-only values are clearly separated.
+- [x] `.env.example` exists.
+- [x] No secret values are committed.
+- [x] Public and server-only values are clearly separated.
 - [ ] Invalid required configuration fails clearly.
-- [ ] Production addresses are not scattered through UI components.
+- [x] Production addresses are not scattered through UI components.
 
 ---
 
 ## 12. Phase 8 — Establish API Boundary
 
-Status: **Pending**
+Status: **Source foundation written; runtime/acceptance checks pending**
 
 Create a typed application API layer.
 
@@ -502,18 +505,18 @@ A development mock implementation may exist if backend endpoints are unavailable
 
 ### Phase 8 Acceptance Criteria
 
-- [ ] API interface exists.
-- [ ] HTTP implementation boundary exists.
-- [ ] Response validation strategy exists.
-- [ ] UI does not scatter raw request logic.
-- [ ] Mock behavior, if used, is clearly marked.
-- [ ] Missing backend schemas are not invented silently.
+- [x] API interface exists.
+- [x] HTTP implementation boundary exists.
+- [x] Response validation strategy exists.
+- [x] UI does not scatter raw request logic.
+- [x] Mock behavior, if used, is clearly marked.
+- [x] Missing backend schemas are not invented silently.
 
 ---
 
 ## 13. Phase 9 — Establish Wallet/Web3 Boundary
 
-Status: **Pending**
+Status: **Source foundation written; runtime/acceptance checks pending**
 
 Create centralized Web3 infrastructure for:
 
@@ -546,19 +549,19 @@ Exact implementation must follow verified installed versions.
 
 ### Phase 9 Acceptance Criteria
 
-- [ ] MiniPay detection is centralized.
-- [ ] Standard-web wallet behavior is centralized.
-- [ ] Wallet runtime state is normalized for feature consumption.
-- [ ] Chain configuration has one canonical source.
-- [ ] Contract addresses have one canonical source.
-- [ ] G$ unit conversion avoids floating-point arithmetic.
-- [ ] No production transaction is simulated locally.
+- [x] MiniPay detection is centralized.
+- [x] Standard-web wallet behavior is centralized.
+- [x] Wallet runtime state is normalized for feature consumption.
+- [x] Chain configuration has one canonical source.
+- [x] Contract addresses have one canonical source.
+- [x] G$ unit conversion avoids floating-point arithmetic.
+- [x] No production transaction is simulated locally.
 
 ---
 
 ## 14. Phase 10 — Establish Transaction State Model
 
-Status: **Pending**
+Status: **Source foundation written; runtime/acceptance checks pending**
 
 Implement reusable transaction lifecycle handling.
 
@@ -590,17 +593,17 @@ Normalize common failure categories where practical:
 
 ### Phase 10 Acceptance Criteria
 
-- [ ] Transaction lifecycle model exists.
-- [ ] Rejected and failed states are distinguishable.
-- [ ] Blockchain confirmation is distinguishable from backend synchronization.
-- [ ] Transaction components/hooks can be reused by shop, tournament, and rewards.
-- [ ] No feature grants authoritative state based solely on transaction submission.
+- [x] Transaction lifecycle model exists.
+- [x] Rejected and failed states are distinguishable.
+- [x] Blockchain confirmation is distinguishable from backend synchronization.
+- [x] Transaction components/hooks can be reused by shop, tournament, and rewards.
+- [x] No feature grants authoritative state based solely on transaction submission.
 
 ---
 
 ## 15. Phase 11 — Establish Phaser Boundary
 
-Status: **Pending**
+Status: **Source foundation written; runtime/acceptance checks pending**
 
 Create the browser-only game host without implementing full gameplay.
 
@@ -639,15 +642,15 @@ Do not implement frame-level React synchronization.
 - [ ] Phaser initializes on the play route.
 - [ ] Game runtime tears down cleanly.
 - [ ] Resize handling works.
-- [ ] Visibility pause/resume behavior exists.
-- [ ] Bridge is typed.
-- [ ] React is not updated every frame.
+- [x] Visibility pause/resume behavior exists.
+- [x] Bridge is typed.
+- [x] React is not updated every frame.
 
 ---
 
 ## 16. Phase 12 — Establish Shared Deterministic Package
 
-Status: **Pending**
+Status: **Source foundation written; runtime/acceptance checks pending**
 
 Create the shared package boundary required for deterministic replay.
 
@@ -667,17 +670,17 @@ If backend/game rules remain undefined, establish the boundary and types needed 
 
 ### Phase 12 Acceptance Criteria
 
-- [ ] Shared package exists.
+- [x] Shared package exists.
 - [ ] Web application can import it.
-- [ ] Package does not depend on React or Phaser.
-- [ ] Deterministic domain code remains framework-independent.
-- [ ] No duplicate scoring implementation exists.
+- [x] Package does not depend on React or Phaser.
+- [x] Deterministic domain code remains framework-independent.
+- [x] No duplicate scoring implementation exists.
 
 ---
 
 ## 17. Phase 13 — Establish PWA Foundation
 
-Status: **Pending**
+Status: **Source foundation written; runtime/acceptance checks pending**
 
 Implement the initial PWA infrastructure according to the selected Next.js/Serwist integration.
 
@@ -707,8 +710,8 @@ Do not cache authoritative mutable data such as:
 ### Phase 13 Acceptance Criteria
 
 - [ ] Manifest resolves correctly.
-- [ ] Service-worker configuration matches the actual Next.js bundler.
-- [ ] Static-shell strategy is defined.
+- [x] Service-worker configuration matches the actual Next.js bundler.
+- [x] Static-shell strategy is defined.
 - [ ] Mutable authoritative APIs are not cached incorrectly.
 - [ ] Installed application can load its intended shell.
 - [ ] PWA configuration does not break production build.
@@ -717,7 +720,7 @@ Do not cache authoritative mutable data such as:
 
 ## 18. Phase 14 — Establish Testing Baseline
 
-Status: **Pending**
+Status: **Source foundation written; runtime/acceptance checks pending**
 
 Set up:
 
@@ -742,8 +745,8 @@ Minimum foundation tests should cover:
 - [ ] Unit test command works.
 - [ ] End-to-end test command works.
 - [ ] Initial meaningful tests pass.
-- [ ] No test suite depends unnecessarily on production services.
-- [ ] Critical architecture boundaries have at least baseline verification.
+- [x] No test suite depends unnecessarily on production services.
+- [x] Critical architecture boundaries have at least baseline verification.
 
 ---
 
@@ -782,9 +785,9 @@ Also verify:
 - [ ] Tests pass.
 - [ ] Production build succeeds.
 - [ ] Required routes load.
-- [ ] Repository documentation reflects actual state.
-- [ ] Remaining blockers are explicitly documented.
-- [ ] No known implementation is represented as complete when still mocked.
+- [x] Repository documentation reflects actual state.
+- [x] Remaining blockers are explicitly documented.
+- [x] No known implementation is represented as complete when still mocked.
 
 ---
 
@@ -801,7 +804,7 @@ The six [ADR-0001 gates](../../decisions/ADR-0001-frontend-stack.md#deferred--un
 5. MiniPay/browser/WebView support floor.
 6. GoodDollar package adoption.
 
-Codex must stop at each affected boundary until its gate is resolved. Do not invent authentication, signing, SDK, environment or browser-support workarounds; do not install GoodDollar packages. Foundation structure and infrastructure may be established after separate authorization, but no gate is waived by that milestone or by existing phase checklists. Preserve interfaces without pretending blocked integrations work. ADR-required real-device and integration verification remains pending.
+Codex must stop at each affected boundary until its gate is resolved. Do not invent authentication, signing, SDK, environment or browser-support workarounds; do not install GoodDollar packages. Foundation structure and infrastructure are authorized and now written, but no gate is waived by that milestone or by existing phase checklists. Preserve interfaces without pretending blocked integrations work. ADR-required real-device and integration verification remains pending.
 
 ### MiniPay Authentication
 
@@ -837,38 +840,23 @@ Do not invent server-authoritative rules merely to complete scaffolding.
 
 Research checkpoint (2026-10-07): official dependency research completed and recorded.
 
-Current checkpoint: ADR-0001 created and designated by the user as the controlling approved baseline for planning; documentation synchronized for frontend foundation implementation readiness. Package installation and implementation still require separate authorization. Integration acceptance and Phases 2–15 implementation/verification remain unfinished.
+Current checkpoint (2026-10-07): implementation authorized without agent installation or server startup. Exact pnpm manifests, all eight routes, Night Market tokens/UI, providers, validated configuration, API/HTTP interfaces, runtime-specific wallet adapters, transaction controller/hook, browser-only Phaser host, shared replay interfaces, PWA/static fallback and tests are written. No authoritative service, gameplay or payment flow is represented as operational. A root npm package-lock.json appeared during work, locking only TypeScript; it was left unchanged and is not a resolved pnpm workspace graph.
+
+Verification completed with the locally available TypeScript 5.9.3: source syntax diagnostics clear; shared-package strict typecheck passes; architecture/exact-manifest and whitespace scripts pass; dependency-light core assertions pass. Full application/worker typecheck, Vitest, build, resolved graph/audit and Playwright/device verification remain pending because their dependencies are absent. Standard ESLint/formatter pins remain unapproved; the narrow source checks do not replace those tools.
 
 Current overall progress:
 
-```text
-[x] Repository orchestration structure
-[x] Agent operating rules
-[x] Product specification
-[x] Target architecture
-[x] Current-state baseline
-[x] Initial active execution plan
+- [x] Research and ADR-controlled exact baseline.
+- [x] Source foundations for Phases 2–14 (runtime acceptance incomplete).
+- [x] Explicit unavailable API/auth/GoodDollar/game states; no fake successful integrations.
+- [x] Provisional frontend contracts recorded in [API_CONTRACTS.md](../../API_CONTRACTS.md).
+- [x] Dependency-free source checks, shared typecheck and targeted core checks.
+- [ ] User installation and generated lockfile; resolved graph/audit review.
+- [ ] Full app/worker typecheck, Vitest, production/worker build and browser checks.
+- [ ] Approved standard lint/formatter tools and exact pnpm toolchain pin.
+- [ ] Resolve ADR-0001 integration gates, authoritative backend schemas, game rules and contract deployments before affected integrations.
 
-[x] Dependency research pass (remaining integration gates documented)
-[ ] Resolve integration questions
-[x] Frontend baseline ADR created (ADR-0001; declared status Proposed)
-[x] Frontend baseline approved for implementation planning by user direction
-[ ] Resolve ADR-0001 integration gates and record any required further decisions
-[ ] Approved baseline installed and resolved graph verified
-[ ] Repository scaffold
-[ ] Web application scaffold
-[ ] Design foundation
-[ ] Provider architecture
-[ ] Environment configuration
-[ ] API boundary
-[ ] Wallet/Web3 boundary
-[ ] Transaction state model
-[ ] Phaser boundary
-[ ] Shared deterministic package
-[ ] PWA foundation
-[ ] Testing baseline
-[ ] Final foundation verification
-```
+Exact next implementation area: after dependency availability, fix any foundation compile/build/runtime defects against the unchanged baseline; then implement the approved backend session/round contracts and shared deterministic gameplay rules when supplied. Do not invent those requirements. No further application feature requiring those authorities is currently safe to activate.
 
 ---
 

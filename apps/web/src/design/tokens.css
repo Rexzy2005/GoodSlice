@@ -1,0 +1,13 @@
+/* Generated from tokens.json by scripts/generate-assets.mjs. */
+@theme {
+  --color-night: #0E1712;
+  --color-canopy: #18261D;
+  --color-vine: #2A3D31;
+  --color-mango: #FFB627;
+  --color-leaf: #2FBF71;
+  --color-melon: #FF4D6D;
+  --color-sky: #3BA8FF;
+  --color-ember: #E5383B;
+  --color-cream: #F7F2E7;
+  --color-mist: #A7B3AA;
+}

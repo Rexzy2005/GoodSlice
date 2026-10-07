@@ -70,7 +70,7 @@ The same web application must serve normal browsers, installed PWA usage, and Mi
 
 ## 3. Repository-Level Boundaries
 
-The target repository is a workspace/monorepo.
+The target repository is a workspace/monorepo. [ADR-0002](docs/decisions/ADR-0002-workspace-package-manager.md) selects pnpm and records user-owned installation/server startup. The current foundation contains apps/web and packages/shared; packages/contracts is deferred until contract work requires it.
 
 Primary domains:
 
