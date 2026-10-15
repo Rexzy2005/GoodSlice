@@ -133,6 +133,9 @@ Those values must come from their authoritative source.
 
 ## 5. Rendering Model
 
+The public / landing page has its own server-rendered composition and a Launch game link to the /play lobby. The /play/arena route owns the browser-only canvas, bridge-driven HUD and renderer/display controls; the lobby does not mount Phaser. The arena has a focused (arena) layout with the same centralized providers and wallet boundary; other game routes share the (game) App Router layout, which owns the arcade navigation and client providers. Wallet selection is exposed in the gaming header, with automatic MiniPay connection preserved. The public landing does not mount Query or Web3 providers.
+
+
 Use the Next.js App Router architecture.
 
 Default to server-rendered/server-capable application structure where practical.

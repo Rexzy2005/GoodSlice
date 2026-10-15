@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('/font/SpaceGrotesk.ttf') format('truetype');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+:root { --font-site: 'Rajdhani', Arial, sans-serif; font-family: var(--font-site); font-synthesis: none; }
+
+@font-face { font-family:'Rajdhani'; src:url('/font/Rajdhani-Medium.ttf') format('truetype'); font-weight:500; font-style:normal; font-display:swap; }
+@font-face { font-family:'Rajdhani'; src:url('/font/Rajdhani-Bold.ttf') format('truetype'); font-weight:700; font-style:normal; font-display:swap; }
+:root { --font-game:'Rajdhani',Arial,sans-serif; }

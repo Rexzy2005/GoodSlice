@@ -88,7 +88,7 @@ export default function StandardProvider({
 
   return (
     <WagmiProvider config={config}>
-      <RainbowKitProvider theme={darkTheme()}>
+      <RainbowKitProvider theme={{ ...darkTheme(), fonts: { body: 'var(--font-site)' } }}>
         <ConnectedState runtime="standard">
           {children}
         </ConnectedState>

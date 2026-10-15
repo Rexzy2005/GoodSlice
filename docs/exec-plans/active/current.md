@@ -1,5 +1,11 @@
 # Active Execution Plan — Frontend Foundation and Integration Readiness
 
+Mobile header and borderless surface update (2026-10-15): mobile logo stays left, hamburger is right, and wallet control lives inside the right-hand slide menu. Desktop wallet remains in the header. The drawer releases its native modal before the standard wallet picker opens, avoiding a body-portal trapped behind the dialog. Unavailable-wallet explanations remain inside the drawer. Card borders were removed across landing/lobby/shared panels; color surfaces preserve separation and keyboard focus outlines remain. No dependencies or browser use. Verification: strict TypeScript, all 11 targeted drawer/wallet/balance tests and git diff checks pass. Real-device layout and wallet portal interaction remain unverified.
+
+## Landing, lobby and mobile navigation
+
+2026-10-15: replaced the lobby and public landing with new Night Market layouts. Mobile game navigation now uses a sliding native dialog below 721px with a close button, Escape/native focus containment, route dismissal and body scroll restoration; desktop keeps its sidebar. Lobby balance uses the existing WalletContext and never shows cached values when disconnected, offline, wrong-network or errored. Rajdhani 500/700 now applies to the entire site, wallet typography and offline fallback. No new dependencies or integration behavior. Strict TypeScript, all 65 unit tests across 19 files and git diff checks pass. Browser/device and fresh production-build verification remain pending; lint execution was blocked by the environment sandbox.
+
 ## 1. Objective
 
 Prepare GoodSlice for professional frontend implementation by establishing a verified technical baseline, scaffolding the frontend correctly, and creating the minimum architecture required for later feature work.
@@ -12,9 +18,29 @@ The goal is to produce a stable, verified foundation that future implementation 
 
 ---
 
+## Settings simplification and ready UI (2026-10-15)
+
+User restricted settings to difficulty, sound on/off and fruit selection. Implemented those options through a typed configure-preview bridge command; no scored gameplay rules changed. Ready screen shows current mode/fruit count and one primary action. Site-wide icon wrapper now uses lucide-react 0.468.0, matching verified prior Lucide asset revision. User-owned installation of exact 0.468.0 was observed during the run. The agent did not run installation commands or edit the lockfile; no browser use. Strict TypeScript and all 58 unit tests across 17 files pass.
+
+## Pause settings (2026-10-15)
+
+Added a pause-only Settings entry and accessible native modal with sound toggle, volume, sound cue previews, fullscreen and control guidance. The dialog is outside the touch-canceling board so mobile settings can scroll normally. Dismissal keeps the game paused; volume is session-scoped. Unit regression covers opening, retained volume and dismissal without resume. No browser verification authorized. Pause-settings verification: strict TypeScript, all eight arena unit tests and git diff checks pass. Native dialog rendering, focus behavior and device interaction remain unverified in a real browser.
+
+## Arena UI cleanup (2026-10-15)
+
+Removed the settings/sound card and duplicate bottom lobby/wallet controls at user request. Kept the quick gameplay controls and one header lobby link. Fixed desktop HUD grid columns to prevent auto-placement wrapping. Updated unit and E2E expectations. TypeScript, all seven arena unit tests and git diff checks pass; browser execution remains prohibited.
+
+## Arena gesture/header follow-up (2026-10-15)
+
+User reported page scrolling during mobile slicing and disliked the header. Reworked the header into compact lobby/title/status and stat cards. Added board-wide touch-action/overscroll rules and a non-passive touchmove handler with unmount cleanup, preserving Phaser input propagation and outside-board scrolling. Added a regression test for cancellation, propagation and cleanup. TypeScript, git diff checks and all seven arena unit tests pass after rerunning one initial timeout. No PC-browser use; real-device verification remains pending.
+
+## Arena mobile UI refinement (2026-10-15)
+
+User priority: mobile-first UI polish only. Do not use the user’s PC browser for inspection or testing. No installs or server startup. Implemented a four-button quick-control dock outside settings, 44px+ control targets, stable viewport sizing, safe-area padding, portrait/short-landscape layouts, flexible ready/error overlays, and simplified expandable sound settings. Desktop retains a 1440px cap. Gameplay and integration boundaries are unchanged. 2026-10-15 verification: strict TypeScript and git diff checks pass. The main Vitest run passed 45 tests but two workers timed out before startup; rerunning those two files separately passed all nine tests. All 54 tests passed across these runs, not in one clean suite run. No browser, device or fresh production-build verification was performed for this UI revision. Visual/device acceptance remains explicitly unverified under the no-browser constraint.
+
 ## 2. Current Phase
 
-Status: **Phase 15 verification in progress — typechecks, 35 unit tests and production/worker build pass; browser/security acceptance pending**
+Status: **Phase 15 verification in progress: typechecks, 45 unit tests and production/worker build pass; browser/security acceptance pending**
 
 Dependency research and ADR creation are complete. [ADR-0001](../../decisions/ADR-0001-frontend-stack.md) governs the approved exact frontend baseline. Its declared status is **Proposed**; the user explicitly directed that its approved baseline choices control implementation planning. This plan records that authorization without changing the ADR status or resolving its gates.
 
@@ -838,6 +864,18 @@ Do not invent server-authoritative rules merely to complete scaffolding.
 
 ## 21. Progress
 
+Juice/slash refinement (2026-10-09): added kiwi, lemon, apple and peach, centralized fruit skin/flesh/juice colors, bounded resampled/tapered blade trails that fade after release, and translucent board splatters with fading wet highlights. Splatter groups persist 35 seconds, cap at 40, and clear with preview lifecycle. TypeScript and 52 tests pass; Chrome visual check confirmed lingering stains. No scoring/backend behavior changed. Mobile performance remains pending.
+
+Airborne fruit (2026-10-09): user requested bottom-up throws and a maximum arena width. Implemented a 1440px cap, staggered visual waves of intact melon/orange/plum, constant-acceleration arcs and rotation, swipe-oriented split impulses preserving momentum, bounded lifetimes/counts and resize reset. No authoritative score/life rules added. Strict TypeScript and 49 unit tests pass, including apex, viewport containment, refresh-rate independence and split momentum. Chrome reloaded the runtime and rendered the new airborne fruit. Real touch/long-session performance acceptance remains pending.
+
+Arena composition refinement (2026-10-09): aligned HUD/board viewport proportions and ready-screen positioning to arena.png, moved wallet/lobby links below the board, and collapsed secondary controls/audio. Desktop Chrome inspection on the user-started server verifies preview entry, controls disclosure, pause and clean preview exit. TypeScript and all 46 unit tests pass. Existing generated artwork and typography are approximations, not pixel-exact reference assets. Mobile acceptance remains pending.
+
+Reference playground/effects (2026-10-09): implemented a standalone full-width arena layout, generated walnut/brass board and transparent fruit artwork, compact HUD with unknown authoritative readings, interactive cosmetic cutting preview, bounded juice/trail/half effects, and opt-in synthesized click/swipe/cut/splash/boom/fail/success/combo audio with mute/volume/cleanup. Art source and exact prompts are recorded in research/playground-assets.md. Effects are not verified rounds. All 45 unit tests across 14 files and the final production build with strict TypeScript pass. The generated worker has 223 precache URLs (8.65 MB), including both new WebP assets. Browser visual, touch and audible sound acceptance remain pending.
+
+Lobby/board update (2026-10-09): replaced Phantom Guardians with licensed self-hosted Space Grotesk; /play now serves the lobby and /play/arena the dedicated wooden canvas. Added bridge-driven HUD, renderer pause/resume, fullscreen with failure handling, help and unavailable inventory state. No game rules or authoritative readings invented. Updated route coverage and added control/HUD tests. Final Next.js/Serwist build and strict typecheck pass; all 40 unit tests pass, with focused session/cache rechecks passing. Built HTML confirms lobby/canvas separation. Browser visual and device acceptance remain pending.
+
+UI continuation (2026-10-09): implemented official locally bundled Lucide icons with upstream license, finite reduced-motion-aware fruit/slice/card animations, refined Night Market home/cards/install treatment, route-specific empty-state icons and active-link scrolling in mobile navigation. Removed the user-facing em dash from metadata; application source scan is clear. Added Playwright acceptance cases for reduced motion and mobile active-link visibility. Architecture and whitespace checks pass. Application typecheck passes. Next.js/Serwist production builds pass. All 35 unit tests passed across retries (34 in the single-worker suite, 1 isolated after its worker-startup timeout). A clean combined suite pass is not claimed. Browser verification remains pending. Integration gates and undefined authoritative gameplay/backend requirements remain unchanged.
+
 End-to-end continuation (2026-10-07): added retryable transaction confirmation without duplicate submission, replacement-receipt identity checks, API cancellation propagation, offline balance suppression, and renderer-independent DOM host lifecycle with failed-initialization cleanup. Added regression coverage; 35 tests and application/worker/shared typechecks pass. Gameplay/backend input and a user-started browser-test URL were requested and remain pending. The source of truth still contains no authoritative mechanics or backend protocol; those features remain blocked rather than invented.
 
 
@@ -856,7 +894,7 @@ Current overall progress:
 - [x] Dependency-free source checks, shared typecheck and targeted core checks.
 - [x] User installation and generated pnpm lockfile; direct pins and critical wagmi internals inspected.
 - [ ] Complete resolved-tree security audit (shell execution blocked).
-- [x] App/worker/shared typechecks, 35 Vitest tests and production/worker build.
+- [x] App/worker/shared typechecks, 45 Vitest tests and production/worker build.
 - [ ] Browser E2E, PWA offline/update and real-device wallet checks.
 - [ ] Approved standard lint/formatter tools and exact pnpm toolchain pin.
 - [ ] Resolve ADR-0001 integration gates, authoritative backend schemas, game rules and contract deployments before affected integrations.
@@ -891,3 +929,7 @@ This execution plan is complete only when:
 20. another developer or coding agent can continue without previous chat context
 
 Do not close this plan based solely on scaffold generation.
+
+## Landing and arcade separation (2026-10-09)
+
+User requested a dedicated public landing page and a Launch game entry into the gaming interface. Implemented / as a standalone marketing page and the existing seven game routes under a shared (game) route-group layout, preserving URLs. Query/Web3/RainbowKit providers now live only in that layout. The arcade header exposes Connect wallet on standard web and preserves automatic MiniPay connection/status. Missing wallet configuration is explained on demand, never simulated. The /play composition prioritizes the arena with tournament/shop side panels. Integration gates remain unchanged. Added landing-to-arcade navigation acceptance coverage. Production/Serwist builds, regenerated application typecheck and the full 38-test unit suite pass, including three new wallet-control tests. Built HTML confirms the landing has Launch game without the arcade shell, while /play contains the arcade shell and wallet control. Browser launch was refused with spawn EPERM; visual/E2E acceptance remains pending.

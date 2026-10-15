@@ -148,16 +148,11 @@ Future token-swap functionality must not be treated as implemented unless its pr
 
 The initial product includes these application areas.
 
-### Home
+### Public Landing and Arcade Entry
 
-Must expose primary entry points to:
+The / route is a dedicated public landing page, separate from the gaming interface. Its primary Launch game action opens the /play lobby. The lobby opens /play/arena, a separate wooden chopping-board canvas page with a HUD and display controls. The landing introduces Slyce without mounting wallet providers or displaying the arcade navigation.
 
-- Play
-- Daily Tournament
-- Shop
-- Leaderboard
-- wallet/account state
-- G$ balance
+The gaming interface exposes Play, Daily Tournament, Shop, Leaderboard, Rewards, Get G$ and Profile. Its header provides Connect wallet on standard web and automatic connection/status inside MiniPay. The arena is visually dominant. Account and G$ balance remain available through the wallet/profile interfaces.
 
 ### Game
 
