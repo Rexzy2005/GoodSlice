@@ -1,4 +1,4 @@
-# GoodSlice Research Registry
+# Slyce Research Registry
 
 ## Frontend baseline research
 
@@ -6,9 +6,15 @@ The completed [dependency research](dependency-baseline.md) informed [ADR-0001](
 
 The ADR source field names `docs/research/frontend-dependency-baseline.md`; the actual research file is `docs/research/dependency-baseline.md`, linked above. No duplicate research file is required.
 
+## GoodDollar
+
+[gooddollar.md](gooddollar.md): Celo addresses per environment, decimals, citizen-sdk 1.2.7 API, and test-environment notes.
+
+[reown-appkit.md](reown-appkit.md): AppKit 1.8.24 email/wallet sign-in, Celo embedded-wallet support, dashboard requirements.
+
 ## 1. Purpose
 
-This directory stores durable, verified research for third-party technologies and integrations used by GoodSlice.
+This directory stores durable, verified research for third-party technologies and integrations used by Slyce.
 
 Research exists here so developers and coding agents do not repeatedly:
 
@@ -125,7 +131,7 @@ Recommended structure:
 
 ## Compatibility
 
-## GoodSlice Implementation Requirements
+## Slyce Implementation Requirements
 
 ## Known Constraints
 
@@ -147,7 +153,7 @@ Before recording a finding:
 1. identify the technology and relevant version
 2. locate the current official documentation
 3. verify that the documentation applies to the selected version
-4. verify the exact behavior GoodSlice depends on
+4. verify the exact behavior Slyce depends on
 5. record the source
 6. record the verification date
 
@@ -284,7 +290,7 @@ MiniPay is an exciting mobile wallet ecosystem with many useful capabilities...
 
 Research documentation exists to reduce implementation uncertainty, not to teach the technology from first principles.
 
-Record only information GoodSlice needs.
+Record only information Slyce needs.
 
 ---
 
@@ -323,7 +329,7 @@ Research answers:
 
 Architecture decisions answer:
 
-> Given those facts, what will GoodSlice do?
+> Given those facts, what will Slyce do?
 
 Do not confuse the two.
 
@@ -336,7 +342,7 @@ Framework A supports options X and Y.
 Example architectural decision:
 
 ```text
-GoodSlice will use option X because it satisfies MiniPay compatibility and reduces duplicate wallet configuration.
+Slyce will use option X because it satisfies MiniPay compatibility and reduces duplicate wallet configuration.
 ```
 
 The first belongs in:
@@ -406,7 +412,7 @@ If new official documentation invalidates an existing architecture assumption:
 6. update `docs/CURRENT_STATE.md` if implementation is currently affected
 7. update the active execution plan when current work changes
 
-Research alone does not automatically override an accepted GoodSlice architectural decision.
+Research alone does not automatically override an accepted Slyce architectural decision.
 
 The conflict must be resolved explicitly.
 
@@ -529,7 +535,7 @@ When researching an API or SDK, capture only implementation-critical information
 - supported environment
 - authentication requirements
 - required parameters
-- returned values relevant to GoodSlice
+- returned values relevant to Slyce
 - known constraints
 - error behavior relevant to application handling
 - version compatibility
@@ -664,7 +670,7 @@ Official sources:
 
 - <relevant compatibility constraint>
 
-## GoodSlice Implementation Requirements
+## Slyce Implementation Requirements
 
 - <what implementation must do because of the verified findings>
 
@@ -693,16 +699,16 @@ Use repository documents according to their responsibility:
 
 ```text
 docs/PROJECT.md
-→ What GoodSlice must do
+→ What Slyce must do
 
 ARCHITECTURE.md
-→ How GoodSlice is structured
+→ How Slyce is structured
 
 docs/research/
 → Verified facts about external technologies
 
 docs/decisions/
-→ Why GoodSlice selected a particular approach
+→ Why Slyce selected a particular approach
 
 docs/exec-plans/
 → How current implementation work will be executed

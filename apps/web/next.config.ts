@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next';
 const config: NextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['@goodslice/shared'],
+  transpilePackages: ['@slyce/shared'],
   async headers() {
     return [{ source: '/sw.js', headers: [
       { key: 'Cache-Control', value: 'no-store' },

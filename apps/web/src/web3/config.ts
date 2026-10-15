@@ -18,10 +18,13 @@ export function chainFor(network: NonNullable<PublicConfig['network']>) { return
 export function contractsFor(config: PublicConfig) {
   return { gd: config.gdAddress ? getAddress(config.gdAddress) : undefined,
     shop: config.shopAddress ? getAddress(config.shopAddress) : undefined,
-    tournament: config.tournamentAddress ? getAddress(config.tournamentAddress) : undefined };
+    tournament: config.tournamentAddress ? getAddress(config.tournamentAddress) : undefined,
+    arcade: config.arcadeAddress ? getAddress(config.arcadeAddress) : undefined };
 }
 export function explorerUrl(network: NonNullable<PublicConfig['network']>, kind: 'address' | 'tx', value: string): string {
   const valid = kind === 'address' ? /^0x[0-9a-fA-F]{40}$/.test(value) : /^0x[0-9a-fA-F]{64}$/.test(value);
   if (!valid) throw new Error('Invalid explorer identifier');
   return chainFor(network).blockExplorers.default.url + '/' + kind + '/' + value;
 }
+/** G$ on Celo uses 18 decimals in every GoodDollar environment (verified on-chain; docs/research/gooddollar.md). */
+export const gdDecimals = 18;

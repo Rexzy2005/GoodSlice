@@ -67,3 +67,18 @@ export function fruitTexture(part: 'whole' | 'upper' | 'lower', kind: FruitKind 
   ctx.strokeStyle = 'rgba(255,255,220,.6)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(96, 96, 87, Math.PI * 1.05, Math.PI * 1.65); ctx.stroke();
   return canvas;
 }
+/** Original procedural bomb artwork for practice rounds. */
+export function bombTexture(): HTMLCanvasElement {
+  const canvas = document.createElement('canvas'); canvas.width = canvas.height = 192;
+  const ctx = canvas.getContext('2d'); if (!ctx) throw new Error('Bomb artwork could not initialize');
+  const shell = ctx.createRadialGradient(70, 76, 6, 96, 108, 82);
+  shell.addColorStop(0, '#5b6670'); shell.addColorStop(.55, '#232a30'); shell.addColorStop(1, '#090c0e');
+  ctx.fillStyle = shell; ctx.beginPath(); ctx.arc(96, 108, 74, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#e5383b'; ctx.lineWidth = 7; ctx.beginPath(); ctx.arc(96, 108, 60, Math.PI * .15, Math.PI * .85); ctx.stroke();
+  ctx.fillStyle = '#3b4248'; ctx.fillRect(80, 26, 32, 22);
+  ctx.strokeStyle = '#c9a86a'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(96, 28); ctx.quadraticCurveTo(108, 6, 128, 12); ctx.stroke();
+  ctx.fillStyle = '#ffb627'; ctx.beginPath(); ctx.arc(130, 12, 9, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#fff4d6'; ctx.beginPath(); ctx.arc(130, 12, 4, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,.28)'; ctx.beginPath(); ctx.ellipse(68, 80, 16, 10, -.7, 0, Math.PI * 2); ctx.fill();
+  return canvas;
+}

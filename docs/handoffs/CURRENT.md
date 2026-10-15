@@ -1,23 +1,30 @@
-# GoodSlice Current Handoff
-
-Mobile header and borderless surface update (2026-10-15): mobile logo stays left, hamburger is right, and wallet control lives inside the right-hand slide menu. Desktop wallet remains in the header. The drawer releases its native modal before the standard wallet picker opens, avoiding a body-portal trapped behind the dialog. Unavailable-wallet explanations remain inside the drawer. Card borders were removed across landing/lobby/shared panels; color surfaces preserve separation and keyboard focus outlines remain. No dependencies or browser use. Verification: strict TypeScript, all 11 targeted drawer/wallet/balance tests and git diff checks pass. Real-device layout and wallet portal interaction remain unverified.
+# Slyce Current Handoff
 
 Updated: 2026-10-15
 
-## Current work
+## Objective
 
-2026-10-15: replaced the lobby and public landing with new Night Market layouts. Mobile game navigation now uses a sliding native dialog below 721px with a close button, Escape/native focus containment, route dismissal and body scroll restoration; desktop keeps its sidebar. Lobby balance uses the existing WalletContext and never shows cached values when disconnected, offline, wrong-network or errored. Rajdhani 500/700 now applies to the entire site, wallet typography and offline fallback. No new dependencies or integration behavior. Strict TypeScript, all 65 unit tests across 19 files and git diff checks pass. Browser/device and fresh production-build verification remain pending; lint execution was blocked by the environment sandbox.
+Ship Slyce for GoodDollar Season 5: an app-style PWA with email/wallet sign-in, paid rounds, G$ shop, tournaments, prize claims and the GoodDollar daily claim.
 
-## Preserved behavior and boundaries
+## Done
 
-Arena remains a cosmetic, unscored seven-fruit cutting preview with bounded slash/juice effects and opt-in synthesized audio. Pause settings contain only difficulty, sound on/off and fruit selection. The modal is outside the touch-canceling board; closing it leaves gameplay paused. Wallet selection remains in the lobby shell, never in the arena. App-owned icons use lucide-react 0.468.0.
+See `docs/CURRENT_STATE.md`. Decisions: ADR-0003, ADR-0004, ADR-0005. Research: `docs/research/gooddollar.md`, `docs/research/reown-appkit.md`. Operations: `contracts/README.md`.
 
-All six ADR-0001 gates remain unresolved. Authoritative gameplay rules, backend/session contracts and deployed contract interfaces remain unavailable. Do not fabricate scores, rewards, payments or GoodDollar claims.
+## Remaining, in order
 
-## Constraints and verification
+1. Reown dashboard (cloud.reown.com): create a project, enable Email login, and allowlist the Vercel domain. Copy the project ID.
+2. Deploy the contracts (`contracts/README.md`). Use a multisig as `OWNER` for production G$.
+3. In Vercel, set every variable in `.env.example`, including `NEXT_PUBLIC_APP_URL` and `NEXT_PUBLIC_ARCADE_ADDRESS`. Redeploy.
+4. On a phone:
+   - Sign in with email.
+   - Get G$: verify, claim, and check gas is topped up.
+   - Pay and play a round.
+   - Buy a blade and equip it.
+   - Enter a tournament and submit a score.
+5. Run the Playwright specs against the deployed URL (`PLAYWRIGHT_BASE_URL=... pnpm test:e2e`).
+6. Commit and push as `emmanuelgiftee-ux`. The repo-local identity is set; the remote still points to `Rexzy2005/GoodSlice`.
 
-No installs, dependency changes, dev servers or user-PC browser use. Latest source passes strict TypeScript and all 65 unit tests across 19 files. E2E navigation expectations were updated for the drawer, but browser tests were not run. The latest font precache changes have not had a production/worker build. Earlier browser observations do not verify this revision.
+## Notes
 
-## Exact next action
-
-Collect user feedback on the new landing, lobby, balance card and mobile drawer at mobile and desktop widths, continuing source-based refinements without opening their browser. When production verification is appropriate, build the app and service worker and confirm the two Rajdhani assets are precached. Keep scored gameplay disabled until authoritative rules and backend contracts are supplied.
+- Use Node 24.21.0 (jsdom tests fail on 22.10).
+- After a contract change: `forge build && node script/export-abis.mjs`.

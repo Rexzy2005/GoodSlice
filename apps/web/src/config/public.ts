@@ -8,5 +8,7 @@ export const publicConfig = parsePublicConfig({
   gdAddress: process.env.NEXT_PUBLIC_GD_ADDRESS,
   shopAddress: process.env.NEXT_PUBLIC_SHOP_ADDRESS,
   tournamentAddress: process.env.NEXT_PUBLIC_TOURNAMENT_ADDRESS,
+  arcadeAddress: process.env.NEXT_PUBLIC_ARCADE_ADDRESS,
+  goodDollarEnv: process.env.NEXT_PUBLIC_GOODDOLLAR_ENV,
 });
 export const isProduction = process.env.NODE_ENV === 'production';

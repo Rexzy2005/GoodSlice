@@ -37,7 +37,8 @@ for (const name of ['package.json', 'apps/web/package.json', 'packages/shared/pa
   const manifest = JSON.parse(await readFile(path.join(root, name), 'utf8'));
   for (const [dependency, version] of Object.entries({ ...manifest.dependencies, ...manifest.devDependencies })) {
     if (!/^(?:workspace:)?\d+\.\d+\.\d+$/.test(version)) errors.push(name + ': non-exact dependency ' + dependency);
-    if (dependency.startsWith('@goodsdks/') || dependency.startsWith('@gooddollar/')) errors.push(name + ': gated GoodDollar dependency');
+    // ADR-0004 approves only the official citizen SDK; other GoodDollar packages stay gated.
+    if ((dependency.startsWith('@goodsdks/') || dependency.startsWith('@gooddollar/')) && dependency !== '@goodsdks/citizen-sdk') errors.push(name + ': gated GoodDollar dependency');
   }
 }
 if (errors.length) throw new Error(errors.join('\n'));

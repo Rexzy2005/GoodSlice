@@ -1,14 +1,14 @@
-# GoodSlice Project Specification
+# Slyce Project Specification
 
 ## 1. Purpose
 
-GoodSlice is the repository for the product described in the supplied build guide as **Slyce**.
+This repository contains **Slyce** (renamed from GoodSlice on 2026-10-15).
 
 Product tagline:
 
 > Swipe. Slice. Stack your G$.
 
-Until the team explicitly changes the product name, preserve **Slyce** in user-facing product copy and use **GoodSlice** as the repository/workspace name.
+Use **Slyce** for the product, repository and workspace packages (`slyce`, `@slyce/web`, `@slyce/shared`).
 
 Slyce is a mobile-first game where players slice objects through swipe-based gameplay, earn scores, compete in tournaments, acquire gameplay items, and interact with the GoodDollar G$ token.
 
@@ -16,13 +16,17 @@ The application must combine conventional off-chain gameplay with limited, expli
 
 ---
 
+## 0. Current Product Decisions (2026-10-15)
+
+See ADR-0005: players must sign in (email or wallet) before any app screen; every round costs an on-chain G$ play fee (SlyceArcade); the app opens directly into `/play` with app-style navigation (no landing page). Where this file says otherwise (e.g. §5 "playing a round" is off-chain, §7 public landing), ADR-0005 governs.
+
 ## 2. Primary Product Strategy
 
 The product must ship first as:
 
 1. A responsive website.
 2. An installable Progressive Web App.
-3. The same web application distributed as a MiniPay Mini App.
+3. ~~MiniPay Mini App~~ (removed by ADR-0004; PWA only).
 
 A separate native iOS or Android application is not part of the initial implementation.
 
@@ -31,7 +35,7 @@ The web application must provide one shared product experience across:
 - mobile browsers
 - desktop browsers
 - installed PWA
-- MiniPay
+- ~~MiniPay~~ (removed by ADR-0004)
 
 Platform-specific wallet behavior may differ where required.
 
@@ -152,7 +156,7 @@ The initial product includes these application areas.
 
 The / route is a dedicated public landing page, separate from the gaming interface. Its primary Launch game action opens the /play lobby. The lobby opens /play/arena, a separate wooden chopping-board canvas page with a HUD and display controls. The landing introduces Slyce without mounting wallet providers or displaying the arcade navigation.
 
-The gaming interface exposes Play, Daily Tournament, Shop, Leaderboard, Rewards, Get G$ and Profile. Its header provides Connect wallet on standard web and automatic connection/status inside MiniPay. The arena is visually dominant. Account and G$ balance remain available through the wallet/profile interfaces.
+The gaming interface exposes Play, Daily Tournament, Shop, Leaderboard, Rewards, Get G$ and Profile. Its header provides Connect wallet (RainbowKit). The arena is visually dominant. Account and G$ balance remain available through the wallet/profile interfaces.
 
 ### Game
 
@@ -381,6 +385,8 @@ Do not implement GoodDollar behavior from memory or assumptions.
 ---
 
 ## 14. MiniPay
+
+**Superseded by ADR-0004 (2026-10-15): MiniPay is out of scope; the product ships as a web app and PWA.** The original requirement follows for history.
 
 MiniPay is a first-class distribution environment, not a secondary compatibility target.
 

@@ -1,15 +1,16 @@
 'use client';
 import { createContext, useContext } from 'react';
 import type { Address } from 'viem';
-import type { WalletRuntime } from './runtime';
 export interface WalletState {
-  runtime: WalletRuntime | 'detecting';
   status: 'unavailable' | 'disconnected' | 'connecting' | 'connected' | 'error';
   address?: Address;
   wrongNetwork: boolean;
   message?: string;
-  retry?: () => void;
-  balance: { status: 'offline' | 'unavailable' | 'loading' | 'error' | 'ready'; formatted?: string };
+  balance: { status: 'offline' | 'unavailable' | 'loading' | 'error' | 'ready'; formatted?: string; raw?: bigint };
+  /** Native CELO for network fees. `low` means transactions will likely fail until topped up. */
+  gas?: 'ok' | 'low' | 'unknown';
+  /** Refetches the G$ balance after a confirmed transaction. */
+  refreshBalance?: () => void;
 }
-export const WalletContext = createContext<WalletState>({ runtime: 'detecting', status: 'unavailable', wrongNetwork: false, balance: { status: 'unavailable' } });
+export const WalletContext = createContext<WalletState>({ status: 'unavailable', wrongNetwork: false, balance: { status: 'unavailable' } });
 export const useWallet = () => useContext(WalletContext);

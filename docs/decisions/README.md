@@ -1,4 +1,4 @@
-# GoodSlice Architecture Decision Records
+# Slyce Architecture Decision Records
 
 ## Decision Index
 
@@ -6,12 +6,15 @@
 | --- | --- | --- |
 | [ADR-0001 — Frontend Dependency Baseline](ADR-0001-frontend-stack.md) | Proposed | Controlling frontend baseline for implementation planning by explicit user direction; six integration gates remain unresolved. |
 | [ADR-0002 — pnpm Workspace Ownership](ADR-0002-workspace-package-manager.md) | Accepted | Explicit user choice of pnpm; user owns installation/server startup while source implementation proceeds. |
+| [ADR-0003 — Local Practice Rounds](ADR-0003-local-practice-rounds.md) | Accepted | Device-local, unverified practice scoring until authoritative rules and replay exist. |
+| [ADR-0004 — Contracts, GoodDollar SDK, PWA-only](ADR-0004-contracts-gooddollar-pwa.md) | Accepted (partly superseded by ADR-0005) | SlyceShop/SlyceTournament, operator-posted results, citizen-sdk 1.2.7, MiniPay removed; agent installs authorized. |
+| [ADR-0005 — Upgradeable contracts, sign-in, paid rounds, app shell](ADR-0005-app-shell-signin-upgradeable.md) | Accepted | UUPS + strict contracts, SlyceArcade play fee, Reown AppKit email/wallet sign-in, app-style shell, Slyce rename. |
 
 The statuses above match their ADRs exactly. The [active execution plan](../exec-plans/active/current.md) records the user-authorized implementation scope; agent installation/server startup remain prohibited. Supporting research is [dependency-baseline.md](../research/dependency-baseline.md), not the nonexistent `frontend-dependency-baseline.md` named in the ADR source field.
 
 ## 1. Purpose
 
-This directory stores durable architectural decisions for GoodSlice.
+This directory stores durable architectural decisions for Slyce.
 
 Decision records exist so future developers and coding agents can understand:
 
@@ -180,14 +183,14 @@ Avoid long project summaries.
 
 ## 7. Decision
 
-The `Decision` section states exactly what GoodSlice will do.
+The `Decision` section states exactly what Slyce will do.
 
 It must be specific enough that implementation does not need to guess.
 
 Good:
 
 ```text
-GoodSlice will use a runtime-specific wallet adapter. MiniPay will use the injected provider with automatic connection, while standard web will use the approved wallet UI and connector stack.
+Slyce will use a runtime-specific wallet adapter. MiniPay will use the injected provider with automatic connection, while standard web will use the approved wallet UI and connector stack.
 ```
 
 Avoid:
@@ -262,7 +265,7 @@ Implementation
 
 Research determines what external systems support.
 
-ADRs determine what GoodSlice chooses to do.
+ADRs determine what Slyce chooses to do.
 
 ---
 
@@ -287,7 +290,7 @@ Do not leave the architecture document and accepted decisions contradictory.
 
 Research files contain verified external facts.
 
-ADR files contain GoodSlice decisions based on those facts.
+ADR files contain Slyce decisions based on those facts.
 
 Example:
 
@@ -296,7 +299,7 @@ Research:
 MiniPay requires automatic wallet connection.
 
 Decision:
-GoodSlice will use a dedicated MiniPay wallet adapter and will not render the standard wallet picker inside MiniPay.
+Slyce will use a dedicated MiniPay wallet adapter and will not render the standard wallet picker inside MiniPay.
 ```
 
 Do not turn research findings directly into implementation without checking whether an architectural decision is required.
@@ -434,7 +437,7 @@ Do not assume an old architectural decision remains valid across major dependenc
 A useful ADR must let a future developer answer:
 
 - What problem existed?
-- What did GoodSlice choose?
+- What did Slyce choose?
 - Why was this option selected?
 - What evidence supports it?
 - What trade-offs were accepted?

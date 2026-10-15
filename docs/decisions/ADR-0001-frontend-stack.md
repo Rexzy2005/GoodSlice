@@ -1,4 +1,4 @@
-# ADR: GoodSlice Frontend Dependency Baseline
+# ADR: Slyce Frontend Dependency Baseline
 
 - **Status:** Proposed
 - **Date:** 2026-10-07
@@ -7,7 +7,7 @@
 
 ## Context
 
-GoodSlice needs a frontend dependency baseline before application scaffolding and implementation begin.
+Slyce needs a frontend dependency baseline before application scaffolding and implementation begin.
 
 The dependency research verified proposed package versions, direct peer ranges, runtime engine requirements, selected SDK exports, and official integration guidance. It did **not** verify a resolved transitive dependency graph, production build, strict typecheck, real-device MiniPay behavior, service-worker behavior, or GoodDollar identity/claim execution. The research therefore remains partially verified rather than an implementation-ready proof. :chatgpt-content-reference{index="0"}
 
@@ -19,7 +19,7 @@ This ADR separates the baseline choices approved for implementation planning fro
 
 ### Approved baseline choices
 
-Use the following as the GoodSlice frontend baseline:
+Use the following as the Slyce frontend baseline:
 
 | Area | Approved choice |
 | --- | --- |
@@ -74,7 +74,7 @@ The existing separation between wallet connection and application authentication
 
 GoodDollar documentation and published SDK behavior do not fully agree.
 
-If GoodDollar support is implemented, use the actual published SDK types/exports and normalize them behind a GoodSlice integration boundary. Do not suppress type errors to imitate stale examples. :chatgpt-content-reference{index="7"}
+If GoodDollar support is implemented, use the actual published SDK types/exports and normalize them behind a Slyce integration boundary. Do not suppress type errors to imitate stale examples. :chatgpt-content-reference{index="7"}
 
 ### 3. GoodDollar identity flow inside MiniPay
 
@@ -92,7 +92,7 @@ Do not map mainnet GoodDollar addresses onto Celo Sepolia. A supported test envi
 
 Tailwind v4's documented browser requirements must be validated against the actual MiniPay Android/iOS device population.
 
-No GoodSlice minimum WebView/browser support matrix is approved yet. :chatgpt-content-reference{index="10"}
+No Slyce minimum WebView/browser support matrix is approved yet. :chatgpt-content-reference{index="10"}
 
 ### 6. GoodDollar package adoption
 
@@ -119,7 +119,7 @@ Before treating this ADR as an implementation-proven baseline:
 11. Verify service-worker caching does not cache authoritative APIs, RPC, sessions, inventory, prices, or rewards.
 12. Verify RainbowKit, injected wallets, and WalletConnect in the standard web runtime.
 13. Verify automatic MiniPay detection and connection on real supported devices.
-14. Verify MiniPay transaction fee behavior for the actual GoodSlice payment path.
+14. Verify MiniPay transaction fee behavior for the actual Slyce payment path.
 15. Verify browser/WebView compatibility against the product's supported-device matrix.
 16. If GoodDollar is enabled, separately verify the approved SDK version, supported environment, identity flow, entitlement/claim flow, fee path, token addresses, decimals, and callback behavior.
 

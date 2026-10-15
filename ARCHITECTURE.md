@@ -1,4 +1,6 @@
-# GoodSlice Architecture
+# Slyce Architecture
+
+> 2026-10-15: MiniPay is removed and the app ships as web + PWA only. Application contracts live in `contracts/`. See ADR-0004, which supersedes the MiniPay sections below.
 
 ## 1. Purpose
 
@@ -24,7 +26,7 @@ Architectural changes that materially alter this document require a decision rec
 
 ## 2. System Overview
 
-GoodSlice/Slyce consists of five primary runtime domains:
+Slyce/Slyce consists of five primary runtime domains:
 
 1. Web application
 2. Game runtime
@@ -75,7 +77,7 @@ The target repository is a workspace/monorepo. [ADR-0002](docs/decisions/ADR-000
 Primary domains:
 
 ```text
-goodslice/
+slyce/
 ├── apps/
 │   └── web/
 │       ├── frontend application
@@ -552,7 +554,7 @@ through page components.
 
 ## 16. G$ Transaction Model
 
-GoodSlice uses GoodDollar G$ for supported value flows.
+Slyce uses GoodDollar G$ for supported value flows.
 
 Purchases and tournament entry are designed around a single-transaction token-and-call flow where supported by the confirmed contracts.
 
@@ -567,7 +569,7 @@ G$ Token
      |
      | token transfer + callback
      v
-GoodSlice Contract
+Slyce Contract
      |
      | event
      v

@@ -9,15 +9,17 @@ async function load(relative) {
   const source = await readFile(new URL('../' + relative, import.meta.url), 'utf8');
   const output = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
   if (/require\(/.test(output)) throw new Error('Unexpected runtime dependency in pure boundary');
-  const dir = await mkdtemp(path.join(tmpdir(), 'goodslice-core-'));
+  const dir = await mkdtemp(path.join(tmpdir(), 'slyce-core-'));
   const target = path.join(dir, 'boundary.cjs');
   try { await writeFile(target, output); return require(target); }
   finally { delete require.cache[target]; await unlink(target); await rmdir(dir); }
 }
-const runtime = await load('apps/web/src/web3/runtime.ts');
-assert.equal(runtime.detectWalletRuntime({ isMiniPay: true }), 'minipay');
-assert.equal(runtime.isMiniPayProvider({ isMiniPay: true }), false);
-assert.equal(runtime.detectWalletRuntime(undefined), 'standard');
+const rules = await load('apps/web/src/game/practice-rules.ts');
+let practice = rules.newPractice();
+for (let i = 0; i < 3; i++) practice = rules.cutFruit(practice);
+practice = rules.endSwipe(practice).state; assert.equal(practice.score, 45);
+for (let i = 0; i < rules.startingLives; i++) practice = rules.missFruit(practice);
+assert.equal(practice.over, 'lives'); assert.equal(rules.cutFruit(practice), practice);
 const policy = await load('apps/web/src/pwa/cache-policy.ts');
 for (const input of ['/', '/api/session', '/api/rewards', '/rpc', '/leaderboard', 'https://rpc.example/_next/static/a.js']) assert.equal(policy.safePrecachePath(input), false);
 assert.equal(policy.safePrecachePath('/offline.html'), true);
@@ -41,4 +43,4 @@ await reverted.run({ ...ops, receipt: async () => ({ ...receipt, status: 'revert
 const syncing = transactions.createTransactionController(() => {});
 await syncing.run({ ...ops, synchronized: async () => { throw new Error('offline'); } }); assert.equal(syncing.getState().kind, 'synchronization');
 await syncing.retrySynchronization(ops); assert.equal(syncing.getState().status, 'success');
-console.log('Core checks passed: runtime detection, cache exclusions, async teardown, transaction rejection/revert/indexer states.');
+console.log('Core checks passed: practice rules, cache exclusions, async teardown, transaction rejection/revert/indexer states.');

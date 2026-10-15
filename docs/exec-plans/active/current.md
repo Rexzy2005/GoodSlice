@@ -6,9 +6,16 @@ Mobile header and borderless surface update (2026-10-15): mobile logo stays left
 
 2026-10-15: replaced the lobby and public landing with new Night Market layouts. Mobile game navigation now uses a sliding native dialog below 721px with a close button, Escape/native focus containment, route dismissal and body scroll restoration; desktop keeps its sidebar. Lobby balance uses the existing WalletContext and never shows cached values when disconnected, offline, wrong-network or errored. Rajdhani 500/700 now applies to the entire site, wallet typography and offline fallback. No new dependencies or integration behavior. Strict TypeScript, all 65 unit tests across 19 files and git diff checks pass. Browser/device and fresh production-build verification remain pending; lint execution was blocked by the environment sandbox.
 
+## Season 5 ship (2026-10-15)
+
+Objective: playable practice game, G$ shop and tournaments via repo contracts, GoodDollar claim, PWA-only (ADR-0003, ADR-0004).
+Progress: implementation and local verification are complete (see CURRENT_STATE.md).
+Blockers: mainnet deployment needs the owner's key and gas; Vercel env setup; real-device wallet testing.
+Acceptance: deployed contracts configured in Vercel; a purchase, a tournament entry and a GoodDollar claim succeed on a phone.
+
 ## 1. Objective
 
-Prepare GoodSlice for professional frontend implementation by establishing a verified technical baseline, scaffolding the frontend correctly, and creating the minimum architecture required for later feature work.
+Prepare Slyce for professional frontend implementation by establishing a verified technical baseline, scaffolding the frontend correctly, and creating the minimum architecture required for later feature work.
 
 This plan covers the transition from documentation-only state to a working frontend foundation.
 
@@ -267,7 +274,7 @@ Create the initial workspace structure.
 Target high-level structure:
 
 ```text
-goodslice/
+slyce/
 ├── apps/
 │   └── web/
 │

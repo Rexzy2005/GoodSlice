@@ -18,7 +18,7 @@ afterEach(() => { cleanup(); observed.commands.length = 0; observed.bridge = und
 it('does not invent readings and uses bridge commands to pause and resume', () => {
   render(<GameHost />);
   expect(screen.queryByRole('button', { name: 'Start round' })).toBeNull();
-  expect(screen.getAllByText('Not started')).toHaveLength(2);
+  expect(screen.getAllByText('Not started')).toHaveLength(1);
   fireEvent.click(screen.getByRole('button', { name: 'Pause canvas' }));
   expect(observed.commands).toEqual([{ type: 'pause' }]);
   expect(screen.getByRole('heading', { name: 'Your board is paused.' })).toBeTruthy();
@@ -41,19 +41,35 @@ it('handles fullscreen refusal without breaking the session', async () => {
   else Reflect.deleteProperty(document, 'fullscreenEnabled');
 });
 
-it('starts cosmetic preview without starting an authoritative round', () => {
+it('starts a local practice round without starting an authoritative round', () => {
   render(<GameHost />);
-  fireEvent.click(screen.getByRole('button', { name: 'Try cutting effects' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Quick start practice' }));
   expect(observed.commands).toEqual([{ type: 'resume' }, { type: 'preview', enabled: true }]);
-  expect(screen.getAllByText('Not started')).toHaveLength(2);
-  fireEvent.click(screen.getByRole('button', { name: 'Exit effects preview' }));
+  expect(observed.commands.some(command => command.type === 'start')).toBe(false);
+  fireEvent.click(screen.getByRole('button', { name: 'End practice round' }));
   expect(observed.commands.at(-1)).toEqual({ type: 'preview', enabled: false });
+});
+
+it('shows combos, game over and a device-local best, then restarts', () => {
+  window.localStorage.clear();
+  render(<GameHost />);
+  fireEvent.click(screen.getByRole('button', { name: 'Start practice round' }));
+  act(() => { observed.bridge?.emit({ type: 'combo', count: 3, bonus: 15 }); observed.bridge?.emit({ type: 'game-over', score: 90, cause: 'bomb' }); });
+  expect(screen.getByText('x3 +15')).toBeTruthy();
+  expect(screen.getByRole('heading', { name: 'Game over' })).toBeTruthy();
+  expect(screen.getByText('YOU HIT A BOMB')).toBeTruthy();
+  expect(screen.getByText('New best!', { exact: false })).toBeTruthy();
+  expect(window.localStorage.getItem('slyce.practice.best.normal')).toBe('90');
+  fireEvent.click(screen.getByRole('button', { name: 'Play again' }));
+  expect(observed.commands.at(-1)).toEqual({ type: 'preview', enabled: true });
+  expect(screen.queryByRole('heading', { name: 'Game over' })).toBeNull();
+  window.localStorage.clear();
 });
 
 it('removes the settings card while keeping the primary preview available', () => {
   render(<GameHost />);
   expect(screen.queryByText('Arena controls & sound')).toBeNull();
-  fireEvent.click(screen.getByRole('button', { name: 'Start effects preview' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Start practice round' }));
   expect(observed.commands).toEqual([{ type: 'resume' }, { type: 'preview', enabled: true }]);
 });
 
@@ -121,4 +137,30 @@ it('opens settings only from pause and preserves difficulty and fruit choices', 
     if (show) Object.defineProperty(prototype, 'showModal', show); else Reflect.deleteProperty(prototype, 'showModal');
     if (close) Object.defineProperty(prototype, 'close', close); else Reflect.deleteProperty(prototype, 'close');
   }
+});
+
+it('never starts a round until the play fee is paid', () => {
+  window.localStorage.clear();
+  let paid: (() => void) | undefined;
+  render(<GameHost payGate={start => { paid = start; return <p>Pay 1 G$ to play</p>; }} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Start practice round' }));
+  expect(screen.getByRole('dialog', { name: 'Pay to play' })).toBeTruthy();
+  expect(observed.commands.some(command => command.type === 'preview')).toBe(false);
+  fireEvent.click(screen.getByRole('button', { name: 'Not now' }));
+  expect(screen.queryByRole('dialog', { name: 'Pay to play' })).toBeNull();
+  expect(observed.commands.some(command => command.type === 'preview')).toBe(false);
+
+  fireEvent.click(screen.getByRole('button', { name: 'Quick start practice' }));
+  act(() => paid?.()); // fee confirmed on-chain
+  expect(observed.commands).toContainEqual({ type: 'preview', enabled: true });
+  expect(screen.queryByRole('dialog', { name: 'Pay to play' })).toBeNull();
+
+  observed.commands.length = 0;
+  act(() => observed.bridge?.emit({ type: 'game-over', score: 10, cause: 'lives' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Play again' }));
+  expect(screen.getByRole('dialog', { name: 'Pay to play' })).toBeTruthy();
+  expect(observed.commands).toEqual([]);
+  act(() => paid?.());
+  expect(observed.commands).toEqual([{ type: 'preview', enabled: true }]);
+  window.localStorage.clear();
 });
