@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createGameAudio, type GameAudio } from './audio';
 import { defaultPreviewSettings, type PreviewSettings } from './preview-settings';
 import { PauseSettings } from './pause-settings';
+import { LoadingScreen } from '../components/loading-screen';
 import { Icon } from '../components/icon';
 import { createGameBridge, type GameBridge } from './bridge';
 import { attachGameHost } from './host-lifecycle';
@@ -116,7 +117,8 @@ export function GameHost() {
     <div ref={board} className={effectsPreview ? 'chopping-board effects-active' : 'chopping-board'} aria-label="Game canvas">
       <div ref={container} className="game-canvas" aria-hidden="true" />
 
-      {(!effectsPreview || paused || failed) && <div className={paused || failed ? 'board-center' : 'board-center board-ready'}>{!paused && !failed && <Image className="ready-fruit-art" src="/game/fruit-splash-v1.webp" alt="" width={1672} height={941} priority unoptimized />}<span className="board-symbol"><Icon name={paused ? 'pause' : 'scissors'} /></span><p className="eyebrow">{paused ? 'TAKE A BREATHER' : 'SLICE INTO SOMETHING GOOD'}</p><h2>{failed ? 'Canvas unavailable' : paused ? 'Your board is paused.' : 'Ready to slice?'}</h2><p className={!paused && !failed ? 'sr-only' : undefined} role={failed ? 'alert' : 'status'}>{paused ? 'Resume the canvas whenever you are ready.' : status}</p>
+      {!ready && !failed && <div className="board-loading"><LoadingScreen message="Preparing your board" detail="Getting everything ready for your first cut." compact /></div>}
+      {(ready || failed) && (!effectsPreview || paused || failed) && <div className={paused || failed ? 'board-center' : 'board-center board-ready'}>{!paused && !failed && <Image className="ready-fruit-art" src="/game/fruit-splash-v1.webp" alt="" width={1672} height={941} priority unoptimized />}<span className="board-symbol"><Icon name={paused ? 'pause' : 'scissors'} /></span><p className="eyebrow">{paused ? 'TAKE A BREATHER' : 'SLICE INTO SOMETHING GOOD'}</p><h2>{failed ? 'Canvas unavailable' : paused ? 'Your board is paused.' : 'Ready to slice?'}</h2><p className={!paused && !failed ? 'sr-only' : undefined} role={failed ? 'alert' : 'status'}>{paused ? 'Resume the canvas whenever you are ready.' : status}</p>
       {failed ? <button className="button" onClick={retry}><Icon name="reset" /> Retry canvas</button> : paused ? <button className="button" onClick={togglePause}><Icon name="play" /> Resume canvas</button> : <button className="button board-start" aria-label="Start effects preview" title="Cosmetic cutting preview. No score or rewards are recorded." disabled={!ready} onClick={togglePreview}><Icon name="play" /> Start slicing</button>}
       {paused && !failed && <button className="control-button pause-settings-trigger" onClick={() => setSettingsOpen(true)}><Icon name="settings" /> Settings</button>}
       {!paused && !failed && <><p className="ready-instruction">Swipe through the fruit. Make every cut count.</p><span className="ready-mode">{previewSettings.difficulty} · {previewSettings.fruits.length} fruit types</span><p id="round-boundary" className="board-boundary">Free slicing · No score recorded</p></>}</div>}
